@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>社团招新智能平台原型</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --line: #e6ebf2;
+      --text: #18202a;
+      --subtle: #5d6b82;
+      --primary: #3b82f6;
+      --primary-soft: #e8f1ff;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --shadow: 0 10px 30px rgba(24, 32, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 30%);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6 60%, #60a5fa);
+      color: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .hero-stat {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin: 22px 0 18px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--subtle);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 8px 18px rgba(59, 130, 246, 0.25);
+    }
+
+    .screen {
+      display: none;
+      gap: 18px;
+    }
+
+    .screen.active {
+      display: grid;
+    }
+
+    .student-screen {
+      grid-template-columns: 320px 1fr;
+    }
+
+    .club-screen,
+    .admin-screen {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin-top: 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .subtle {
+      color: var(--subtle);
+      font-size: 14px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      background: #f0f4f9;
+      color: #405168;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .chip.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: #c7dcff;
+    }
+
+    .match-card,
+    .club-card,
+    .status-card,
+    .metric-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .match-list,
+    .club-list,
+    .status-list,
+    .metric-grid,
+    .table-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .table-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .club-detail {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef6ff;
+      color: var(--primary);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status.pending {
+      background: #fff7ed;
+      color: var(--warning);
+    }
+
+    .status.success {
+      background: #ecfdf3;
+      color: var(--success);
+    }
+
+    .status.reject {
+      background: #fef2f2;
+      color: var(--danger);
+    }
+
+    .status.info {
+      background: #eff6ff;
+      color: var(--primary);
+    }
+
+    .muted-list {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--subtle);
+      line-height: 1.7;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #eef3f8;
+      color: #324155;
+    }
+
+    .kvs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+      font-size: 14px;
+    }
+
+    .kvs span {
+      color: var(--subtle);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      padding: 12px 10px;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--subtle);
+      font-weight: 600;
+      background: #fbfcfe;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 4px;
+    }
+
+    .timeline-item strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      color: var(--subtle);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .student-screen,
+      .club-detail,
+      .hero-grid,
+      .metric-grid,
+      .table-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 16px;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .kvs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <h1>社团招新智能平台</h1>
+      <p>这是一个覆盖学生端、社团端、管理端的MVP交互原型，核心目标是打通“社团发现-智能匹配-在线报名-状态追踪”的完整闭环，并用轻量后台支持招新处理与校级管理。</p>
+      <div class="hero-grid">
+        <div class="hero-stat">
+          <strong>学生端优先</strong>
+          <div>先解决新生不知道选什么、如何报、报完后去哪看的问题。</div>
+        </div>
+        <div class="hero-stat">
+          <strong>3端闭环</strong>
+          <div>学生发现报名、社团筛选处理、学校统一审核与看板。</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" data-screen="student">学生端</button>
+      <button class="tab" data-screen="club">社团端</button>
+      <button class="tab" data-screen="admin">管理端</button>
+    </div>
+
+    <section class="screen student-screen active" id="student">
+      <div class="panel">
+        <div class="section-title">
+          <div>
+            <h2>我的画像</h2>
+            <div class="subtle">推荐引擎的首期输入数据</div>
+          </div>
+          <span class="badge">MVP核心</span>
+        </div>
+        <div class="kvs">
+          <div><span>学院</span>计算机学院</div>
+          <div><span>年级</span>2026级新生</div>
+          <div><span>可投入时间</span>每周2-4小时</div>
+          <div><span>期望收获</span>技能提升、社交拓展</div>
+        </div>
+        <div class="chips" id="interestChips">
+          <button class="chip active">媒体运营</button>
+          <button class="chip active">摄影摄像</button>
+          <button class="chip active">设计创意</button>
+          <button class="chip">竞赛科研</button>
+          <button class="chip">体育运动</button>
+          <button class="chip">公益服务</button>
+        </div>
+        <ul class="muted-list">
+          <li>首期推荐基于兴趣标签、时间偏好、技能标签、社团热度四个维度综合计算。</li>
+          <li>推荐结果必须提供推荐原因，避免“黑盒推荐”。</li>
+        </ul>
+      </div>
+
+      <div class="screen active" style="display:grid; gap:18px;">
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>为你推荐的社团</h2>
+              <div class="subtle">按MatchScore排序，展示推荐原因</div>
+            </div>
+            <button class="btn btn-secondary" id="refreshRecommend">重新计算推荐</button>
+          </div>
+          <div class="match-list" id="matchList"></div>
+        </div>
+
+        <div class="club-detail">
+          <div class="panel">
+            <div class="section-title">
+              <div>
+                <h2 id="detailName">青藤融媒体中心</h2>
+                <div class="subtle" id="detailCategory">校园媒体类社团</div>
+              </div>
+              <span class="status success">招新中</span>
+            </div>
+            <p id="detailIntro">负责校园内容策划、公众号运营、摄影摄像和活动传播，适合希望提升内容表达和媒体技能的新生。</p>
+            <div class="chips" id="detailTags"></div>
+            <div class="section-title" style="margin-top:18px;">
+              <h3>推荐原因</h3>
+            </div>
+            <ul class="muted-list" id="detailReasons"></ul>
+            <div class="section-title" style="margin-top:18px;">
+              <h3>招新信息</h3>
+            </div>
+            <div class="kvs">
+              <div><span>报名截止</span><span id="detailDeadline">2026-09-20 18:00</span></div>
+              <div><span>方向</span><span id="detailDirections">采编、设计、摄影</span></div>
+              <div><span>活动频率</span><span id="detailFrequency">每周1-2次</span></div>
+              <div><span>适合人群</span><span id="detailFit">愿意持续参与校园内容创作</span></div>
+            </div>
+            <div class="cta-row">
+              <button class="btn btn-primary">立即报名</button>
+              <button class="btn btn-secondary">收藏社团</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="section-title">
+              <div>
+                <h2>我的报名</h2>
+                <div class="subtle">学生端状态追踪</div>
+              </div>
+            </div>
+            <div class="status-list">
+              <div class="status-card">
+                <div class="section-title">
+                  <strong>青藤融媒体中心</strong>
+                  <span class="status info">待面试</span>
+                </div>
+                <div class="subtle">已投递方向：摄影摄像</div>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="dot"></div>
+                    <div><strong>已提交</strong><div class="subtle">2026-09-10 09:20</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="dot"></div>
+                    <div><strong>待筛选</strong><div class="subtle">社团已查看你的报名表</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="dot"></div>
+                    <div><strong>待面试</strong><div class="subtle">面试时间：2026-09-12 19:00，大学生活动中心301</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="status-card">
+                <div class="section-title">
+                  <strong>青年公益协会</strong>
+                  <span class="status pending">待筛选</span>
+                </div>
+                <div class="subtle">报名时间：2026-09-09 20:15</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>社团发现中心</h2>
+              <div class="subtle">列表、搜索、筛选、排序</div>
+            </div>
+          </div>
+          <div class="chips">
+            <button class="chip active">全部</button>
+            <button class="chip">文艺</button>
+            <button class="chip">学术</button>
+            <button class="chip">体育</button>
+            <button class="chip">公益</button>
+            <button class="chip">媒体</button>
+          </div>
+          <div class="club-list" id="clubList" style="margin-top:16px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen club-screen" id="club">
+      <div class="panel">
+        <div class="section-title">
+          <div>
+            <h2>社团招新工作台</h2>
+            <div class="subtle">轻量后台，只覆盖招新流程闭环</div>
+          </div>
+          <span class="badge">社团负责人视角</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="subtle">总报名数</div>
+            <h3>128</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">待筛选</div>
+            <h3>43</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">待面试</div>
+            <h3>21</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">已录取</div>
+            <h3>18</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-grid">
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>报名列表</h2>
+              <div class="subtle">支持按状态筛选和结果处理</div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>学生</th>
+                <th>方向</th>
+                <th>匹配度</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>李同学</td>
+                <td>摄影摄像</td>
+                <td>92</td>
+                <td><span class="status info">待面试</span></td>
+              </tr>
+              <tr>
+                <td>王同学</td>
+                <td>内容编辑</td>
+                <td>88</td>
+                <td><span class="status pending">待筛选</span></td>
+              </tr>
+              <tr>
+                <td>陈同学</td>
+                <td>平面设计</td>
+                <td>81</td>
+                <td><span class="status success">已录取</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>当前处理面板</h2>
+              <div class="subtle">展示MVP需要的最小处理动作</div>
+            </div>
+          </div>
+          <div class="kvs">
+            <div><span>学生姓名</span>李同学</div>
+            <div><span>报名方向</span>摄影摄像</div>
+            <div><span>兴趣标签</span>媒体运营、摄影摄像</div>
+            <div><span>可投入时间</span>每周2-4小时</div>
+          </div>
+          <ul class="muted-list">
+            <li>推荐亮点：兴趣标签高度匹配，且时间投入与社团活动频次一致。</li>
+            <li>处理动作：标记待面试、填写面试时间、录入录取结果。</li>
+          </ul>
+          <div class="cta-row">
+            <button class="btn btn-secondary">标记待筛选</button>
+            <button class="btn btn-primary">发送面试通知</button>
+            <button class="btn btn-secondary">录取</button>
+            <button class="btn btn-secondary">未通过</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">
+          <div>
+            <h2>招新计划配置</h2>
+            <div class="subtle">控制时间窗口、方向和报名字段</div>
+          </div>
+        </div>
+        <div class="kvs">
+          <div><span>招新批次</span>2026秋季招新</div>
+          <div><span>报名时间</span>2026-09-08至2026-09-20</div>
+          <div><span>招新方向</span>采编、设计、摄影</div>
+          <div><span>预计招募人数</span>25人</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen admin-screen" id="admin">
+      <div class="panel">
+        <div class="section-title">
+          <div>
+            <h2>校级管理看板</h2>
+            <div class="subtle">审核、周期配置、数据总览</div>
+          </div>
+          <span class="badge">学校管理员视角</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="subtle">已入驻社团</div>
+            <h3>86</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">审核中社团</div>
+            <h3>12</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">总报名人数</div>
+            <h3>2,438</h3>
+          </div>
+          <div class="metric-card">
+            <div class="subtle">详情转报名率</div>
+            <h3>34.6%</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-grid">
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>社团审核</h2>
+              <div class="subtle">管理员确认社团资料与招新内容是否合规</div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>社团名称</th>
+                <th>分类</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>星火机器人社</td>
+                <td>学术科技</td>
+                <td><span class="status pending">待审核</span></td>
+                <td>通过 / 驳回</td>
+              </tr>
+              <tr>
+                <td>青年公益协会</td>
+                <td>公益服务</td>
+                <td><span class="status success">已通过</span></td>
+                <td>查看</td>
+              </tr>
+              <tr>
+                <td>风羽街舞社</td>
+                <td>文艺体育</td>
+                <td><span class="status reject">已驳回</span></td>
+                <td>查看原因</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <div>
+              <h2>招新周期配置</h2>
+              <div class="subtle">统一控制平台开放时间</div>
+            </div>
+          </div>
+          <div class="status success">当前生效：2026秋季招新</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div><strong>周期开始</strong><div class="subtle">2026-09-08 00:00</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div><strong>报名截止</strong><div class="subtle">2026-09-20 23:59</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div><strong>结果发布建议截止</strong><div class="subtle">2026-09-27 18:00</div></div>
+            </div>
+          </div>
+          <div class="cta-row">
+            <button class="btn btn-primary">编辑周期</button>
+            <button class="btn btn-secondary">发布通知模板</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      原型说明：该页面用于展示MVP范围和信息架构，不包含完整业务校验与后端逻辑。
+    </div>
+  </div>
+
+  <script>
+    const clubs = [
+      {
+        name: "青藤融媒体中心",
+        category: "校园媒体类社团",
+        intro: "负责校园内容策划、公众号运营、摄影摄像和活动传播，适合希望提升内容表达和媒体技能的新生。",
+        score: 92,
+        deadline: "2026-09-20 18:00",
+        directions: "采编、设计、摄影",
+        frequency: "每周1-2次",
+        fit: "愿意持续参与校园内容创作",
+        tags: ["媒体运营", "摄影摄像", "设计创意"],
+        reasons: [
+          "你选择了“媒体运营”和“摄影摄像”兴趣标签，与社团方向高度一致。",
+          "你的可投入时间为每周2-4小时，符合社团活动节奏。",
+          "你希望获得技能提升和社交拓展，这与社团提供的成长路径匹配。"
+        ]
+      },
+      {
+        name: "星火机器人社",
+        category: "学术科技类社团",
+        intro: "围绕机器人、嵌入式开发、赛事训练展开，适合希望参与技术实践和竞赛的新生。",
+        score: 76,
+        deadline: "2026-09-18 22:00",
+        directions: "算法、硬件、软件",
+        frequency: "每周2-3次",
+        fit: "愿意持续投入项目实践与竞赛训练",
+        tags: ["竞赛科研", "编程开发", "工程实践"],
+        reasons: [
+          "你有一定技能提升诉求，社团提供系统化项目训练。",
+          "你选择了设计创意标签，但学术向标签偏少，因此匹配度中等。",
+          "如果你希望未来参与比赛，该社团具备较强成长空间。"
+        ]
+      },
+      {
+        name: "青年公益协会",
+        category: "公益服务类社团",
+        intro: "组织校园志愿服务、社区活动和公益项目，适合希望提升行动力和组织协作能力的新生。",
+        score: 83,
+        deadline: "2026-09-22 20:00",
+        directions: "活动策划、志愿服务、宣传",
+        frequency: "每周1次",
+        fit: "适合想稳定参与活动、偏好团队协作的同学",
+        tags: ["公益服务", "活动策划", "运营协作"],
+        reasons: [
+          "你的社交拓展诉求与该社团的团队活动场景较匹配。",
+          "该社团时间压力适中，对新生较友好。",
+          "如果你希望先从低门槛参与开始，这个社团更容易融入。"
+        ]
+      }
+    ];
+
+    const tabs = document.querySelectorAll(".tab");
+    const screens = document.querySelectorAll(".screen");
+    const matchList = document.getElementById("matchList");
+    const clubList = document.getElementById("clubList");
+    const detailName = document.getElementById("detailName");
+    const detailCategory = document.getElementById("detailCategory");
+    const detailIntro = document.getElementById("detailIntro");
+    const detailTags = document.getElementById("detailTags");
+    const detailReasons = document.getElementById("detailReasons");
+    const detailDeadline = document.getElementById("detailDeadline");
+    const detailDirections = document.getElementById("detailDirections");
+    const detailFrequency = document.getElementById("detailFrequency");
+    const detailFit = document.getElementById("detailFit");
+    const refreshRecommend = document.getElementById("refreshRecommend");
+
+    function renderClubCard(club, compact = false) {
+      const wrapper = document.createElement("div");
+      wrapper.className = compact ? "club-card" : "match-card";
+      wrapper.innerHTML = `
+        <div class="section-title">
+          <div>
+            <strong>${club.name}</strong>
+            <div class="subtle">${club.category}</div>
+          </div>
+          <span class="badge">MatchScore ${club.score}</span>
+        </div>
+        <div class="subtle">${club.intro}</div>
+        <div class="chips">
+          ${club.tags.map((tag) => `<span class="chip">${tag}</span>`).join("")}
+        </div>
+      `;
+      wrapper.addEventListener("click", () => updateDetail(club));
+      return wrapper;
+    }
+
+    function updateDetail(club) {
+      detailName.textContent = club.name;
+      detailCategory.textContent = club.category;
+      detailIntro.textContent = club.intro;
+      detailTags.innerHTML = club.tags.map((tag) => `<span class="chip active">${tag}</span>`).join("");
+      detailReasons.innerHTML = club.reasons.map((reason) => `<li>${reason}</li>`).join("");
+      detailDeadline.textContent = club.deadline;
+      detailDirections.textContent = club.directions;
+      detailFrequency.textContent = club.frequency;
+      detailFit.textContent = club.fit;
+    }
+
+    function renderLists() {
+      matchList.innerHTML = "";
+      clubList.innerHTML = "";
+      clubs
+        .slice()
+        .sort((a, b) => b.score - a.score)
+        .forEach((club) => {
+          matchList.appendChild(renderClubCard(club));
+          clubList.appendChild(renderClubCard(club, true));
+        });
+      updateDetail(clubs[0]);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((item) => item.classList.remove("active"));
+        screens.forEach((screen) => screen.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.screen).classList.add("active");
+      });
+    });
+
+    refreshRecommend.addEventListener("click", () => {
+      clubs.forEach((club) => {
+        const delta = Math.floor(Math.random() * 6) - 2;
+        club.score = Math.max(70, Math.min(96, club.score + delta));
+      });
+      renderLists();
+    });
+
+    renderLists();
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+import type { ClubWorkspaceApplication, ClubWorkspaceClub, RecruitmentCycleConfig } from '../types'
+
+export const clubWorkspaceClubs: ClubWorkspaceClub[] = [
+  {
+    id: 'club-media',
+    name: '青藤融媒体中心',
+    category: '媒体',
+    intro: '负责校园内容策划、采编、设计与摄影传播，是兼具作品沉淀和新手带教的综合媒体社团。',
+    recruitDeadline: '2026-09-20 18:00',
+    directions: ['采编', '设计', '摄影'],
+    status: 'approved',
+    reviewNote: '已通过首轮审核。',
+    leaderName: '林若青',
+    contactEmail: 'media-club@campus.edu',
+  },
+  {
+    id: 'club-public',
+    name: '青年公益协会',
+    category: '公益',
+    intro: '面向社区服务与校园公益活动，关注活动执行、志愿组织和长期项目协作。',
+    recruitDeadline: '2026-09-22 20:00',
+    directions: ['活动策划', '志愿服务', '宣传'],
+    status: 'pending_review',
+    reviewNote: '等待管理员审核简介与截止时间配置。',
+    leaderName: '周以宁',
+    contactEmail: 'public-service@campus.edu',
+  },
+]
+
+export const clubWorkspaceApplications: ClubWorkspaceApplication[] = [
+  {
+    id: 'club-app-1',
+    clubId: 'club-media',
+    applicantName: '陈可',
+    college: '新闻传播学院',
+    major: '传播学',
+    grade: '2026级',
+    selectedDirection: '采编',
+    selfIntro: '对校园内容和人物采访很感兴趣，想在大学里系统练习采访与写作。',
+    attachmentName: 'chenke-resume.pdf',
+    submittedAt: '2026-09-10 19:20',
+    status: '待筛选',
+    note: '建议优先安排一轮采编试稿。',
+  },
+  {
+    id: 'club-app-2',
+    clubId: 'club-media',
+    applicantName: '许舟',
+    college: '计算机学院',
+    major: '软件工程',
+    grade: '2026级',
+    selectedDirection: '设计',
+    selfIntro: '有海报和社媒图设计经验，希望在真实活动中继续提升视觉表达。',
+    attachmentName: 'xuzhou-portfolio.pdf',
+    submittedAt: '2026-09-11 14:05',
+    status: '待面试',
+    note: '作品质量不错，待约面试确认协作稳定性。',
+  },
+  {
+    id: 'club-app-3',
+    clubId: 'club-public',
+    applicantName: '赵一帆',
+    college: '法学院',
+    major: '法学',
+    grade: '2025级',
+    selectedDirection: '活动策划',
+    selfIntro: '希望在公益活动中承担统筹和沟通工作，增强组织能力。',
+    attachmentName: 'zhaoyifan-resume.pdf',
+    submittedAt: '2026-09-12 09:10',
+    status: '已提交',
+    note: '等待社团初筛。',
+  },
+]
+
+export const recruitmentCycles: RecruitmentCycleConfig[] = [
+  {
+    id: 'cycle-2026-autumn',
+    name: '2026秋季社团招新',
+    startDate: '2026-09-05',
+    endDate: '2026-09-30',
+    applyEnabled: true,
+    noticeTemplate: '招新周期已开放，请各社团及时更新资料并处理报名申请。',
+    interviewNoticeTemplate: '你已进入{{clubName}}的面试环节，请关注以下安排：{{note}}',
+  },
+]

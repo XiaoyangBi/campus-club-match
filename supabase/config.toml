@@ -1,0 +1,67 @@
+project_id = "club-match-demo"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[studio]
+enabled = true
+port = 54323
+
+[functions.student-demo-bootstrap]
+verify_jwt = false
+
+[functions.student-demo-profile]
+verify_jwt = false
+
+[functions.student-demo-favorites]
+verify_jwt = false
+
+[functions.student-demo-application]
+verify_jwt = false
+
+[functions.student-demo-application-withdraw]
+verify_jwt = false
+
+[functions.student-demo-ai-match]
+verify_jwt = false
+
+[functions.student-demo-ai-match-latest]
+verify_jwt = false
+
+[functions.student-demo-ai-match-history]
+verify_jwt = false
+
+[functions.student-demo-notifications]
+verify_jwt = false
+
+[functions.student-demo-notifications-read]
+verify_jwt = false
+
+[functions.club-workspace-bootstrap]
+verify_jwt = false
+
+[functions.club-workspace-application-status]
+verify_jwt = false
+
+[functions.club-workspace-club-profile]
+verify_jwt = false
+
+[functions.admin-workspace-bootstrap]
+verify_jwt = false
+
+[functions.admin-workspace-club-review]
+verify_jwt = false
+
+[functions.admin-workspace-cycle]
+verify_jwt = false
+
+[functions.workspace-access]
+verify_jwt = false

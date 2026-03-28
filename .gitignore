@@ -1,0 +1,17 @@
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+*.log
+*.local
+
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/.vercel
+frontend/.env.local
+frontend/*.tsbuildinfo
+.vercel
+
+supabase/.temp
+supabase/.branches
