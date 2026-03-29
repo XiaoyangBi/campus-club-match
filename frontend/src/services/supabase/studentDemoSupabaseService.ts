@@ -2,6 +2,8 @@ import type {
   AiMatchHistoryRecord,
   AiMatchResult,
   ApplicationRecord,
+  ChatbotMessage,
+  ChatbotReply,
   NotificationInbox,
   ResumeParseSuggestion,
   StudentDemoBootstrap,
@@ -83,6 +85,13 @@ export const studentDemoSupabaseService = {
   parseResumeText(extractedText: string) {
     return invokeFunction<ResumeParseSuggestion>('student-demo-resume-parse', {
       extractedText,
+    })
+  },
+
+  chatWithAssistant(messages: ChatbotMessage[], currentPath: string) {
+    return invokeFunction<ChatbotReply>('student-demo-chatbot', {
+      messages,
+      currentPath,
     })
   },
 }

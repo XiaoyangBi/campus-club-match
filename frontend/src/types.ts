@@ -93,6 +93,25 @@ export type ResumeParseSuggestion = {
   evidence: string[]
 }
 
+export type ChatbotRole = 'user' | 'assistant'
+
+export type ChatbotSuggestedClub = {
+  clubId: string
+  reason: string
+}
+
+export type ChatbotMessage = {
+  id: string
+  role: ChatbotRole
+  content: string
+  suggestedClubs?: ChatbotSuggestedClub[]
+}
+
+export type ChatbotReply = {
+  reply: string
+  suggestedClubs: ChatbotSuggestedClub[]
+}
+
 export type NotificationType =
   | 'application_submitted'
   | 'application_withdrawn'

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type {
   AiMatchHistoryRecord,
   AiMatchResult,
+  ChatbotMessage,
   NotificationInbox,
   StudentDemoBootstrap,
   StudentProfile,
@@ -194,6 +195,13 @@ export function useMarkNotificationsReadMutation() {
 export function useParseResumeMutation() {
   return useMutation({
     mutationFn: (extractedText: string) => studentDemoService.parseResumeText(extractedText),
+  })
+}
+
+export function useChatbotMutation() {
+  return useMutation({
+    mutationFn: ({ messages, currentPath }: { messages: ChatbotMessage[]; currentPath: string }) =>
+      studentDemoService.chatWithAssistant(messages, currentPath),
   })
 }
 

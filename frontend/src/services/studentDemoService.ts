@@ -2,6 +2,8 @@ import { clubs, initialProfile } from '../data/mock'
 import type {
   AiMatchHistoryRecord,
   AiMatchResult,
+  ChatbotMessage,
+  ChatbotReply,
   NotificationInbox,
   ResumeParseSuggestion,
   StudentDemoBootstrap,
@@ -42,6 +44,66 @@ function buildMockResumeSuggestion(extractedText: string): ResumeParseSuggestion
       '提取了简历中的项目经历、校园活动和技能关键词',
       '优先映射到平台现有的兴趣、技能与期望收获标签',
     ],
+  }
+}
+
+function buildMockChatbotReply(messages: ChatbotMessage[]): ChatbotReply {
+  const latestMessage = messages[messages.length - 1]?.content.trim() ?? ''
+  const lowerMessage = latestMessage.toLowerCase()
+
+  const matchedClub = clubs.find((club) => latestMessage.includes(club.name))
+
+  if (matchedClub) {
+    return {
+      reply: `${matchedClub.name}属于${matchedClub.category}类社团，主要方向包括${matchedClub.availableDirections.join('、')}。${matchedClub.intro}如果你更看重${matchedClub.highlights[0] ?? '实际参与机会'}，它会是值得优先了解的一类选择。`,
+      suggestedClubs: [
+        {
+          clubId: matchedClub.id,
+          reason: `适合先看${matchedClub.availableDirections[0] ?? '核心方向'}方向`,
+        },
+      ],
+    }
+  }
+
+  if (lowerMessage.includes('简历') || latestMessage.includes('简历')) {
+    return {
+      reply: '社团报名简历建议突出3块：和目标方向相关的经历、你能稳定投入的时间、以及你想在社团里继续提升什么。如果你要投媒体或内容类社团，最好补上作品、活动经历或具体负责过的内容。',
+      suggestedClubs: [],
+    }
+  }
+
+  if (latestMessage.includes('面试')) {
+    return {
+      reply: '社团面试通常会看3点：你为什么想来、你过去做过什么、你进来后想承担什么方向。准备时可以先用1分钟说清兴趣来源，再举1到2个具体经历，最后补一句你能稳定投入的时间。',
+      suggestedClubs: [],
+    }
+  }
+
+  if (latestMessage.includes('报名') || latestMessage.includes('流程')) {
+    return {
+      reply: '平台里的基本流程是：先完善画像，再查看推荐和社团详情，然后提交报名。提交后可以在“报名”页看进度，在“消息”页接收状态通知或面试提醒。',
+      suggestedClubs: [],
+    }
+  }
+
+  if (latestMessage.includes('适合') || latestMessage.includes('怎么选') || latestMessage.includes('推荐')) {
+    const recommended = buildScoredClubs(clubs, initialProfile)
+      .sort((left, right) => right.matchScore - left.matchScore)
+      .slice(0, 3)
+    const recommendedNames = recommended.map((club) => club.name)
+
+    return {
+      reply: `如果你还在犹豫先看哪个社团，可以先从${recommendedNames.join('、')}开始。判断时重点看3点：你的兴趣是否对口、每周投入时间能不能匹配、以及你希望在社团里获得技能提升、表达机会还是社交拓展。`,
+      suggestedClubs: recommended.map((club) => ({
+        clubId: club.id,
+        reason: club.reasons[0] ?? '适合作为优先了解对象',
+      })),
+    }
+  }
+
+  return {
+    reply: '我可以帮你看社团介绍、怎么选社团、报名流程、面试准备和简历优化。你也可以直接问我某个社团值不值得优先投，或者让我们一起比较两个社团。',
+    suggestedClubs: [],
   }
 }
 
@@ -213,5 +275,14 @@ export const studentDemoService = {
     }
 
     return Promise.resolve(buildMockResumeSuggestion(extractedText))
+  },
+
+  chatWithAssistant(messages: ChatbotMessage[], currentPath: string) {
+    if (hasSupabaseEnv) {
+      return studentDemoSupabaseService.chatWithAssistant(messages, currentPath)
+    }
+
+    void currentPath
+    return Promise.resolve(buildMockChatbotReply(messages))
   },
 }

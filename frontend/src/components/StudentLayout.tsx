@@ -1,5 +1,6 @@
 import { NavLink, Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { ChatbotWidget } from './ChatbotWidget'
 import { useStudentDemoNotificationsQuery } from '../hooks/useStudentDemoData'
 import { useStudentDashboardStats } from '../hooks/useClubSelectors'
 
@@ -85,6 +86,8 @@ export function StudentLayout() {
       <div className="page-main">
         <Outlet />
       </div>
+
+      <ChatbotWidget />
     </div>
   )
 }

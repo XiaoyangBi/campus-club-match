@@ -48,6 +48,9 @@ verify_jwt = false
 [functions.student-demo-resume-parse]
 verify_jwt = false
 
+[functions.student-demo-chatbot]
+verify_jwt = false
+
 [functions.club-workspace-bootstrap]
 verify_jwt = false
 
