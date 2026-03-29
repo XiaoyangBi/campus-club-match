@@ -66,16 +66,15 @@ export function useHasApplied(clubId?: string) {
 }
 
 export function useStudentDashboardStats() {
-  const { applications, favorites } = useDemoQuery()
-  const filteredClubs = useFilteredClubs()
+  const { applications, favorites, clubs } = useDemoQuery()
 
   return useMemo(
     () => ({
-      visibleClubCount: filteredClubs.length,
+      openClubCount: clubs.length,
       applicationCount: applications.length,
       favoriteCount: favorites.length,
     }),
-    [applications.length, favorites.length, filteredClubs.length],
+    [applications.length, favorites.length, clubs.length],
   )
 }
 

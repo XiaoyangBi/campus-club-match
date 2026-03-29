@@ -5,7 +5,7 @@ import { useStudentDashboardStats } from '../hooks/useClubSelectors'
 
 export function StudentLayout() {
   const { isAuthEnabled, isAuthenticated, isLoading, signOut, user } = useAuth()
-  const { applicationCount, favoriteCount, visibleClubCount } = useStudentDashboardStats()
+  const { applicationCount, favoriteCount, openClubCount } = useStudentDashboardStats()
   const notificationsQuery = useStudentDemoNotificationsQuery()
   const unreadCount = notificationsQuery.data?.unreadCount ?? 0
 
@@ -67,8 +67,8 @@ export function StudentLayout() {
 
           <div className="hero-stats">
             <div className="stat-card">
-              <span>可浏览社团</span>
-              <strong>{visibleClubCount}</strong>
+              <span>总开放社团</span>
+              <strong>{openClubCount}</strong>
             </div>
             <div className="stat-card">
               <span>我的报名</span>
