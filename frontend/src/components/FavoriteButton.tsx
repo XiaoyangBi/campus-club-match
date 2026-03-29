@@ -12,7 +12,7 @@ export function FavoriteButton({ active, loading = false, onClick }: FavoriteBut
       disabled={loading}
       onClick={onClick}
     >
-      {loading ? '保存中...' : active ? '已收藏' : '收藏'}
+      {loading ? '处理中...' : active ? '取消收藏' : '加入收藏'}
     </button>
   )
 }

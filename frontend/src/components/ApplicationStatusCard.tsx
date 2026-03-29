@@ -38,7 +38,7 @@ export function ApplicationStatusCard({ application, onWithdraw, isWithdrawing =
         <div className="application-detail-card">
           <span className="application-detail-label">简历附件</span>
           <strong>{application.attachmentUrl ? '已上传' : '未上传'}</strong>
-          <p>{application.attachmentUrl ? '报名材料已随记录保存，可随时回看。' : '当前记录没有附带简历附件。'}</p>
+          <p>{application.attachmentUrl ? '可随时打开查看。' : '这次报名没有附简历。'}</p>
           {application.attachmentUrl ? (
             <a href={application.attachmentUrl} target="_blank" rel="noreferrer" className="secondary-link">
               打开简历
@@ -49,15 +49,15 @@ export function ApplicationStatusCard({ application, onWithdraw, isWithdrawing =
       <div className="application-meta">
         <span>提交时间：{application.submittedAt}</span>
         <span>
-          最近一次更新：
+          最新更新：
           {latestHistory ? `${latestHistory.createdAt} · ${operatorLabelMap[latestHistory.operatorType]}` : '暂无'}
         </span>
       </div>
       {application.history.length > 0 ? (
         <div className="application-history-wrapper">
           <div className="application-history-header">
-            <strong>状态时间线</strong>
-            <span>{application.history.length}次记录</span>
+            <strong>状态记录</strong>
+            <span>{application.history.length}条</span>
           </div>
           <div className="application-history-list">
           {application.history.map((item) => (
@@ -68,7 +68,7 @@ export function ApplicationStatusCard({ application, onWithdraw, isWithdrawing =
                   <strong>{item.fromStatus ? `${item.fromStatus} -> ${item.toStatus}` : item.toStatus}</strong>
                   <span>{item.createdAt}</span>
                 </div>
-                <div className="application-history-operator">{operatorLabelMap[item.operatorType]}发起</div>
+                <div className="application-history-operator">{operatorLabelMap[item.operatorType]}更新</div>
                 <p>{item.note}</p>
               </div>
             </div>
@@ -84,7 +84,7 @@ export function ApplicationStatusCard({ application, onWithdraw, isWithdrawing =
             onClick={() => onWithdraw(application.id)}
             disabled={isWithdrawing}
           >
-            {isWithdrawing ? '处理中...' : '放弃报名'}
+            {isWithdrawing ? '处理中...' : '取消报名'}
           </button>
         </div>
       ) : null}

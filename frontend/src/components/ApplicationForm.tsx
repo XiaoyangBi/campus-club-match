@@ -2,7 +2,6 @@ import { MutationFeedback, type MutationFeedbackState } from './MutationFeedback
 import { Link } from 'react-router-dom'
 
 type ApplicationFormProps = {
-  clubName: string
   clubId: string
   directions: string[]
   selectedDirection: string
@@ -19,7 +18,6 @@ type ApplicationFormProps = {
 }
 
 export function ApplicationForm({
-  clubName,
   clubId,
   directions,
   selectedDirection,
@@ -53,7 +51,7 @@ export function ApplicationForm({
               </option>
             ))}
           </select>
-          <span className="field-note">建议优先选择你最愿意长期投入的方向。</span>
+          <span className="field-note">优先选你最想长期参与的方向。</span>
         </div>
 
         <div className="application-form-field">
@@ -68,7 +66,7 @@ export function ApplicationForm({
             rows={7}
             disabled={applied || submitting}
           />
-          <span className="field-note">突出你的兴趣、相关经历和你希望在社团里承担的角色。</span>
+          <span className="field-note">写清你的兴趣、经历和想做什么。</span>
         </div>
 
         <div className="application-form-field">
@@ -87,10 +85,10 @@ export function ApplicationForm({
 
       <div className="stack-actions">
         <button type="button" className="primary-button" onClick={onSubmit} disabled={applied || submitting}>
-          {applied ? '已完成报名' : submitting ? '提交中...' : `确认提交到${clubName}`}
+          {applied ? '查看报名进度' : submitting ? '处理中...' : `提交报名`}
         </button>
         <Link to={`/clubs/${clubId}`} className="secondary-link">
-          返回详情页
+          查看社团详情
         </Link>
       </div>
     </div>

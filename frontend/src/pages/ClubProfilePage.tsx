@@ -20,14 +20,14 @@ export function ClubProfilePage() {
 
   return (
     <main className="single-column">
-      <SectionPanel eyebrow="Club Profile" title="社团资料维护" description="调整社团简介、联系人和招新截止时间，满足首期资料维护场景。">
+      <SectionPanel eyebrow="资料维护" title="社团资料" description="维护对外展示信息与联系人。">
         <div className="ops-form-grid">
           <div className="field-block">
             <label htmlFor="clubName">社团名称</label>
             <input id="clubName" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} />
           </div>
           <div className="field-block">
-            <label htmlFor="clubLeader">负责人</label>
+            <label htmlFor="clubLeader">负责人姓名</label>
             <input id="clubLeader" value={draft.leaderName} onChange={(event) => setDraft({ ...draft, leaderName: event.target.value })} />
           </div>
           <div className="field-block">
@@ -58,7 +58,7 @@ export function ClubProfilePage() {
             className="primary-button"
             onClick={() => updateClubProfile(primaryClub.id, draft)}
           >
-            保存社团资料
+            保存修改
           </button>
         </div>
       </SectionPanel>

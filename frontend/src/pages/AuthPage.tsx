@@ -22,7 +22,7 @@ export function AuthPage() {
       return ''
     }
 
-    return isValidEmail(email) ? '' : '请输入合法邮箱地址'
+    return isValidEmail(email) ? '' : '请输入正确的邮箱'
   }, [email])
 
   const passwordError = useMemo(() => {
@@ -30,11 +30,11 @@ export function AuthPage() {
       return ''
     }
 
-    return password.length >= 6 ? '' : '密码至少需要6位'
+    return password.length >= 6 ? '' : '密码至少6位'
   }, [password])
 
   const confirmPasswordError =
-    mode === 'signup' && confirmPassword && confirmPassword !== password ? '两次输入的密码不一致' : ''
+    mode === 'signup' && confirmPassword && confirmPassword !== password ? '两次密码不一致' : ''
 
   if (!isAuthEnabled) {
     return <Navigate to="/discover" replace />
@@ -46,17 +46,17 @@ export function AuthPage() {
 
   const handleSubmit = async () => {
     if (!isValidEmail(email)) {
-      setErrorMessage('请输入合法邮箱地址')
+      setErrorMessage('请输入正确的邮箱')
       return
     }
 
     if (password.length < 6) {
-      setErrorMessage('密码至少需要6位')
+      setErrorMessage('密码至少6位')
       return
     }
 
     if (mode === 'signup' && confirmPassword !== password) {
-      setErrorMessage('两次输入的密码不一致')
+      setErrorMessage('两次密码不一致')
       return
     }
 
@@ -73,14 +73,14 @@ export function AuthPage() {
 
       const result = await signUpWithPassword(email, password)
       if (result.requiresEmailConfirmation) {
-        setSuccessMessage('注册成功，请前往邮箱完成验证后再登录。')
+        setSuccessMessage('注册成功，请先完成邮箱验证。')
         setMode('signin')
       } else {
-        setSuccessMessage('注册成功，已为你自动登录。')
+        setSuccessMessage('注册成功，已自动登录。')
         navigate('/discover')
       }
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : '认证失败，请稍后重试')
+      setErrorMessage(error instanceof Error ? error.message : '操作失败，请稍后重试')
     } finally {
       setSubmitting(false)
     }
@@ -91,12 +91,10 @@ export function AuthPage() {
       <section className="auth-card">
         <div className="auth-card-copy">
           <span className="landing-stage-label">Student Auth</span>
-          <h1>{mode === 'signin' ? '登录学生端' : '创建学生账号'}</h1>
-          <p>使用邮箱+密码登录，后续画像、报名、消息和AI匹配记录都会绑定到这个正式身份。</p>
+          <h1>{mode === 'signin' ? '登录' : '注册账号'}</h1>
+          <p>登录后，画像、报名和消息都会跟随账号保存。</p>
           <div className="field-note">
-            学生端：任意注册邮箱均可登录。社团端：仅`club_admin_memberships`已授权邮箱可进入，当前已预置
-            `media-admin@campus.edu`、`public-admin@campus.edu`。管理端：仅`platform_admin_users`已授权邮箱可进入，当前已预置
-            `admin@campus.edu`。
+            学生端任意邮箱可注册。社团端和管理端仅限已授权邮箱进入。
           </div>
         </div>
 
@@ -132,7 +130,7 @@ export function AuthPage() {
               id="authEmail"
               type="email"
               className={emailError ? 'field-input error' : 'field-input'}
-              placeholder="请输入常用邮箱"
+              placeholder="输入邮箱"
               value={email}
               disabled={submitting}
               onChange={(event) => setEmail(event.target.value)}
@@ -146,7 +144,7 @@ export function AuthPage() {
               id="authPassword"
               type="password"
               className={passwordError ? 'field-input error' : 'field-input'}
-              placeholder="至少6位"
+              placeholder="输入密码"
               value={password}
               disabled={submitting}
               onChange={(event) => setPassword(event.target.value)}
@@ -161,7 +159,7 @@ export function AuthPage() {
                 id="authConfirmPassword"
                 type="password"
                 className={confirmPasswordError ? 'field-input error' : 'field-input'}
-                placeholder="再次输入密码"
+                placeholder="再输一次密码"
                 value={confirmPassword}
                 disabled={submitting}
                 onChange={(event) => setConfirmPassword(event.target.value)}
@@ -175,10 +173,10 @@ export function AuthPage() {
 
           <div className="stack-actions">
             <button type="button" className="primary-button" disabled={submitting} onClick={() => void handleSubmit()}>
-              {submitting ? '提交中...' : mode === 'signin' ? '登录' : '创建账号'}
+              {submitting ? '处理中...' : mode === 'signin' ? '登录' : '注册'}
             </button>
             <Link to="/" className="secondary-link">
-              返回首页
+              回到首页
             </Link>
           </div>
         </div>

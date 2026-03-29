@@ -11,7 +11,7 @@ export function RecommendationCard({ club, featured = false }: RecommendationCar
     <article className={featured ? 'club-card recommendation-card featured' : 'club-card recommendation-card'}>
       <div className="club-card-top">
         <div className="club-card-heading">
-          <span className="club-card-category">Recommended · {club.category}</span>
+          <span className="club-card-category">推荐 · {club.category}</span>
           <strong>{club.name}</strong>
         </div>
       </div>
@@ -34,7 +34,7 @@ export function RecommendationCard({ club, featured = false }: RecommendationCar
           查看详情
         </Link>
         <Link to={`/apply/${club.id}`} className="text-link primary">
-          去报名
+          提交报名
         </Link>
       </div>
     </article>

@@ -18,7 +18,7 @@ export function ClubDetailPage() {
   if (isBootstrapping) {
     return (
       <main className="single-column">
-        <EmptyState panel title="社团加载中" description="正在加载社团详情，请稍候。" />
+        <EmptyState panel title="正在加载社团" description="请稍候。" />
       </main>
     )
   }
@@ -26,7 +26,7 @@ export function ClubDetailPage() {
   if (!club) {
     return (
       <main className="single-column">
-        <EmptyState panel title="社团不存在" description="当前社团不存在或已下线，请返回发现页重新选择。" />
+        <EmptyState panel title="社团不存在" description="这个社团可能已下线，请返回发现页重新选择。" />
       </main>
     )
   }
@@ -34,7 +34,7 @@ export function ClubDetailPage() {
   return (
     <main className="single-column">
       <SectionPanel
-        eyebrow="Club Detail"
+        eyebrow="社团详情"
         title={club.name}
         description={`${club.category}社团`}
         actions={
@@ -54,12 +54,12 @@ export function ClubDetailPage() {
           club={club}
           sideContent={
             <SubmitActionBox
-              title="下一步动作"
-              description="你可以继续去报名页填写报名方向和自我介绍，也可以回发现页继续比较其他社团。"
+              title="下一步"
+              description="现在就报名，或继续比较其他社团。"
               actions={
                 <>
                 <Link to={`/apply/${club.id}`} className="primary-link">
-                  {applied ? '已报名，查看报名页' : '去报名'}
+                  {applied ? '查看报名进度' : '提交报名'}
                 </Link>
                 <Link to="/discover" className="secondary-link">
                   返回发现页

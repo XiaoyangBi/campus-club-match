@@ -10,7 +10,7 @@ export function StudentLayout() {
   const unreadCount = notificationsQuery.data?.unreadCount ?? 0
 
   if (isAuthEnabled && isLoading) {
-    return <div className="page-shell auth-placeholder">正在初始化学生身份...</div>
+    return <div className="page-shell auth-placeholder">正在加载账号...</div>
   }
 
   if (isAuthEnabled && !isAuthenticated) {
@@ -50,34 +50,32 @@ export function StudentLayout() {
             ) : null}
           </nav>
         </div>
-        {isAuthEnabled && user?.email ? <div className="auth-user-meta">当前账号：{user.email}</div> : null}
+        {isAuthEnabled && user?.email ? <div className="auth-user-meta">登录账号：{user.email}</div> : null}
 
         <div className="hero">
           <div className="hero-copy">
-            <span className="eyebrow">Student Edition</span>
+            <span className="eyebrow">学生端</span>
             <h1>
               为你的大学生活，
               <br />
               找到真正适合的
-              <mark className="hero-highlight">社团投入方式</mark>
+              <mark className="hero-highlight">社团选择</mark>
               。
             </h1>
-            <p>
-              这是一个围绕新生视角搭建的社团发现体验。你可以先完善画像，再用更轻松的方式比较社团、查看方向并完成报名。
-            </p>
+            <p>先填画像，再看推荐，再去报名。</p>
           </div>
 
           <div className="hero-stats">
             <div className="stat-card">
-              <span>当前可浏览社团</span>
+              <span>可浏览社团</span>
               <strong>{visibleClubCount}</strong>
             </div>
             <div className="stat-card">
-              <span>我的报名记录</span>
+              <span>我的报名</span>
               <strong>{applicationCount}</strong>
             </div>
             <div className="stat-card">
-              <span>已收藏社团</span>
+              <span>我的收藏</span>
               <strong>{favoriteCount}</strong>
             </div>
           </div>

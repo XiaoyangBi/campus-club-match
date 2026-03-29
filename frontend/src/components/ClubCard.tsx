@@ -35,7 +35,7 @@ export function ClubCard({ club }: ClubCardProps) {
           查看详情
         </Link>
         <Link to={`/apply/${club.id}`} className="text-link primary">
-          立即报名
+          提交报名
         </Link>
       </div>
     </article>

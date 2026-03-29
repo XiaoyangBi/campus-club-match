@@ -11,7 +11,7 @@ export function ClubDashboardPage() {
 
   return (
     <main className="single-column">
-      <SectionPanel eyebrow="Overview" title="招新概览" description="快速查看当前社团资料状态和待处理报名。">
+      <SectionPanel eyebrow="概览" title="招新概览" description="查看当前进度与待办。">
         <div className="stats-grid">
           <div className="stat-card">
             <span>负责社团</span>
@@ -32,7 +32,7 @@ export function ClubDashboardPage() {
         </div>
       </SectionPanel>
 
-      <SectionPanel eyebrow="Club Status" title="社团发布状态" description="查看当前社团是否已通过审核并保持开放招新。">
+      <SectionPanel eyebrow="状态" title="社团状态" description="查看审核结果与开放状态。">
         <div className="ops-card-grid">
           {clubs.map((club) => (
             <article key={club.id} className="ops-card">
@@ -46,7 +46,7 @@ export function ClubDashboardPage() {
                 </span>
               </div>
               <p>{club.intro}</p>
-              {club.reviewNote ? <div className="field-note">审核备注：{club.reviewNote}</div> : null}
+              {club.reviewNote ? <div className="field-note">备注：{club.reviewNote}</div> : null}
             </article>
           ))}
         </div>

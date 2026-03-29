@@ -9,7 +9,7 @@ export function AdminClubReviewPage() {
 
   return (
     <main className="single-column">
-      <SectionPanel eyebrow="Club Review" title="社团审核" description="对社团资料进行通过或驳回处理，满足首期平台治理要求。">
+      <SectionPanel eyebrow="审核" title="社团审核" description="集中处理社团审核结果。">
         <div className="ops-card-grid">
           {clubs.map((club) => {
             const reason = reasons[club.id] ?? ''
@@ -25,10 +25,10 @@ export function AdminClubReviewPage() {
                   </span>
                 </div>
                 <p>{club.intro}</p>
-                {club.reviewNote ? <div className="field-note">当前审核备注：{club.reviewNote}</div> : null}
+                {club.reviewNote ? <div className="field-note">当前备注：{club.reviewNote}</div> : null}
                 <textarea
                   rows={3}
-                  placeholder="可填写审核意见或驳回原因"
+                  placeholder="填写审核备注或驳回原因"
                   value={reason}
                   onChange={(event) =>
                     setReasons((current) => ({
@@ -39,7 +39,7 @@ export function AdminClubReviewPage() {
                 />
                 <div className="stack-actions">
                   <button type="button" className="primary-button" onClick={() => reviewClub(club.id, 'approved', reason)}>
-                    通过审核
+                    通过
                   </button>
                   <button type="button" className="ghost-button danger" onClick={() => reviewClub(club.id, 'rejected', reason)}>
                     驳回

@@ -168,7 +168,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     (nextProfile: StudentProfile) => {
       setProfileFeedback({
         status: 'loading',
-        message: '正在保存画像...',
+        message: '正在保存...',
       })
 
       void updateProfileMutation
@@ -176,13 +176,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         .then(() => {
           setProfileFeedback({
             status: 'success',
-            message: '画像已自动保存',
+            message: '保存成功',
           })
         })
         .catch(() => {
           setProfileFeedback({
             status: 'error',
-            message: '画像保存失败，请稍后重试',
+            message: '保存失败，请稍后重试',
           })
         })
     },
@@ -221,7 +221,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
     setFavoritesFeedback({
       status: 'loading',
-      message: '正在更新收藏状态...',
+      message: '正在处理...',
     })
 
     void updateFavoritesMutation
@@ -235,7 +235,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       .catch(() => {
         setFavoritesFeedback({
           status: 'error',
-          message: '收藏状态更新失败，请稍后重试',
+          message: '操作失败，请稍后重试',
         })
       })
   }, [favorites, updateFavoritesMutation])
@@ -247,14 +247,14 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       if (!targetClub || applications.some((item) => item.clubId === clubId)) {
         setApplicationFeedback({
           status: 'error',
-          message: '该社团已报名或当前不可提交，请检查后重试',
+          message: '当前无法提交，请刷新后重试',
         })
         return false
       }
 
       setApplicationFeedback({
         status: 'loading',
-        message: '正在提交报名...',
+        message: '正在提交...',
       })
 
       try {
@@ -269,21 +269,21 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         if (!application) {
           setApplicationFeedback({
             status: 'error',
-            message: '报名提交失败，请稍后重试',
+            message: '提交失败，请稍后重试',
           })
           return false
         }
 
         setApplicationFeedback({
           status: 'success',
-          message: `已成功提交到${targetClub.name}`,
+          message: '提交成功',
         })
 
         return true
       } catch {
         setApplicationFeedback({
           status: 'error',
-          message: '报名提交失败，请稍后重试',
+          message: '提交失败，请稍后重试',
         })
         return false
       }
@@ -298,14 +298,14 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       if (!targetApplication || !['已提交', '待筛选', '待面试'].includes(targetApplication.status)) {
         setApplicationFeedback({
           status: 'error',
-          message: '当前状态下无法放弃报名，请刷新后重试',
+          message: '当前状态下无法取消报名',
         })
         return false
       }
 
       setApplicationFeedback({
         status: 'loading',
-        message: '正在放弃报名...',
+        message: '正在处理...',
       })
 
       try {
@@ -314,21 +314,21 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         if (!nextApplication) {
           setApplicationFeedback({
             status: 'error',
-            message: '放弃报名失败，请稍后重试',
+            message: '操作失败，请稍后重试',
           })
           return false
         }
 
         setApplicationFeedback({
           status: 'success',
-          message: `已放弃${targetApplication.clubName}的报名`,
+          message: '已取消报名',
         })
 
         return true
       } catch {
         setApplicationFeedback({
           status: 'error',
-          message: '放弃报名失败，请稍后重试',
+          message: '操作失败，请稍后重试',
         })
         return false
       }

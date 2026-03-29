@@ -66,7 +66,7 @@ export function ProfilePage() {
   }
 
   const isDirty = useMemo(() => !profilesEqual(draftProfile, profile), [draftProfile, profile])
-  const saveStateLabel = profileSaving ? '保存中' : isDirty ? '未保存' : '已保存'
+  const saveStateLabel = profileSaving ? '处理中' : isDirty ? '待保存' : '已保存'
   const saveStateTone = profileSaving ? 'info' : isDirty ? 'pending' : 'success'
 
   const handleSaveProfile = () => {
@@ -94,9 +94,9 @@ export function ProfilePage() {
     <main className="single-column">
       <section className="panel">
         <PageHeader
-          eyebrow="Profile"
+          eyebrow="画像"
           title="我的画像"
-          description="在这个页面集中配置推荐输入条件，调整后会影响发现页和详情页的匹配结果。"
+          description="补齐基础信息和标签，推荐会随之更新。"
           actions={
             <div className="profile-header-actions">
               <span className={`status-badge ${saveStateTone}`}>{saveStateLabel}</span>
@@ -106,7 +106,7 @@ export function ProfilePage() {
                 disabled={profileSaving || !isDirty || Boolean(collegeError) || Boolean(majorError) || Boolean(interestError)}
                 onClick={handleSaveProfile}
               >
-                {profileSaving ? '保存中...' : '保存画像'}
+                {profileSaving ? '处理中...' : '保存修改'}
               </button>
             </div>
           }
@@ -117,7 +117,7 @@ export function ProfilePage() {
         <div className="profile-grid">
           <div className="field-item">
             <span>绑定邮箱</span>
-            <div className="field-static">{account.email || '当前账号未读取到邮箱'}</div>
+            <div className="field-static">{account.email || '未读取到邮箱'}</div>
           </div>
           <div className="field-item">
             <span>学院</span>
@@ -127,7 +127,7 @@ export function ProfilePage() {
               list={collegeOptionsId}
               disabled={profileSaving}
               className={collegeError ? 'field-input error' : 'field-input'}
-              placeholder="请输入或搜索学院后选择"
+              placeholder="搜索并选择学院"
               onChange={(event) => {
                 setDraftProfile((current) => ({
                   ...current,
@@ -159,7 +159,7 @@ export function ProfilePage() {
               value={draftProfile.major}
               disabled={profileSaving}
               className={majorError ? 'field-input error' : 'field-input'}
-              placeholder="请输入你的专业"
+              placeholder="输入专业"
               onChange={(event) => {
                 setDraftProfile((current) => ({
                   ...current,
@@ -212,7 +212,7 @@ export function ProfilePage() {
         />
 
         <div className="field-block">
-          <label htmlFor="profileTimeLevel">可投入时间</label>
+          <label htmlFor="profileTimeLevel">每周可投入时间</label>
           <select
             id="profileTimeLevel"
             value={draftProfile.availableTime}

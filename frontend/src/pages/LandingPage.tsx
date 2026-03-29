@@ -29,8 +29,8 @@ export function LandingPage() {
     id: `${club.id}-bulletin`,
     date: formatShortDate(club.recruitDeadline),
     year: club.recruitDeadline.slice(0, 4),
-    title: `关于${club.name}秋季招新安排的通知`,
-    summary: `${club.name}当前开放${club.availableDirections.join('、')}方向报名，建议尽早完善画像并完成投递。`,
+    title: `${club.name}招新开启`,
+    summary: `现开放${club.availableDirections.join('、')}方向报名。`,
     link: `/clubs/${club.id}`,
     accent: index === 0,
   }))
@@ -53,10 +53,10 @@ export function LandingPage() {
 
         <nav className="landing-nav">
           <a href="#landing-hero">首页</a>
-          <a href="#landing-news">新闻</a>
-          <a href="#landing-activity">活动</a>
-          <Link to="/discover">社团</Link>
-          <Link to="/profile">我的画像</Link>
+          <a href="#landing-news">公告</a>
+          <a href="#landing-activity">推荐</a>
+          <Link to="/discover">发现</Link>
+          <Link to="/profile">画像</Link>
           <Link to="/club/dashboard">社团端</Link>
           <Link to="/admin/dashboard">管理端</Link>
         </nav>
@@ -74,11 +74,11 @@ export function LandingPage() {
               navigate('/auth')
             }}
           >
-            {isAuthenticated ? '进入学生端' : '登录 / 注册'}
+            {isAuthenticated ? '进入学生端' : '登录'}
           </button>
         ) : (
           <Link to="/discover" className="landing-login">
-            进入学生端
+            进入平台
           </Link>
         )}
       </header>
@@ -90,11 +90,9 @@ export function LandingPage() {
             <div className="landing-stage-center">
               <div className="landing-stage-spotlight" />
               <div className="landing-stage-content">
-                <span className="landing-stage-label">2026社团开放季</span>
-                <h1>找到适合你的社团投入方式</h1>
-                <p>
-                  围绕画像匹配、方向筛选和在线报名，帮助新生更快进入真正适合自己的校园组织。
-                </p>
+                <span className="landing-stage-label">2026秋季招新</span>
+                <h1>找到适合你的社团</h1>
+                <p>先填画像，再看推荐，再去报名。</p>
                 <div className="landing-hero-actions">
                   <button
                     type="button"
@@ -112,10 +110,10 @@ export function LandingPage() {
                       navigate('/auth')
                     }}
                   >
-                    {isAuthEnabled ? '登录后进入学生端' : '加入社团'}
+                    {isAuthEnabled ? '进入学生端' : '开始查看'}
                   </button>
                   <Link to={isAuthEnabled && !isAuthenticated ? '/' : '/profile'} className="landing-secondary-button">
-                    先完善画像
+                    去填写画像
                   </Link>
                 </div>
                 {authError ? <div className="landing-auth-error">{authError}</div> : null}
@@ -127,15 +125,15 @@ export function LandingPage() {
           <div className="landing-hero-strip">
             <div>
               <strong>{clubs.length}</strong>
-              <span>开放中的社团</span>
+              <span>开放社团</span>
             </div>
             <div>
               <strong>{recommendedClubs.length}</strong>
-              <span>AI优先推荐</span>
+              <span>AI推荐</span>
             </div>
             <div>
               <strong>{clubs.reduce((total, club) => total + club.availableDirections.length, 0)}</strong>
-              <span>开放报名方向</span>
+              <span>报名方向</span>
             </div>
           </div>
         </section>
@@ -143,10 +141,10 @@ export function LandingPage() {
         <section id="landing-news" className="landing-section">
           <div className="landing-section-heading">
             <div>
-              <h2>新闻公告</h2>
-              <p>NEWS BULLETIN</p>
+              <h2>最新公告</h2>
+              <p>NEWS</p>
             </div>
-            <Link to="/discover">MORE</Link>
+            <Link to="/discover">查看全部</Link>
           </div>
 
           <div className="landing-news-grid">
@@ -172,10 +170,10 @@ export function LandingPage() {
         <section id="landing-activity" className="landing-section">
           <div className="landing-section-heading">
             <div>
-              <h2>近期活动</h2>
-              <p>RECENT ACTIVITY</p>
+              <h2>推荐社团</h2>
+              <p>PICKS</p>
             </div>
-            <Link to="/discover">MORE</Link>
+            <Link to="/discover">查看全部</Link>
           </div>
 
           <div className="landing-activity-grid">

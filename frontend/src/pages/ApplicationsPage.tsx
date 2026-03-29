@@ -12,12 +12,12 @@ export function ApplicationsPage() {
   return (
     <main className="single-column">
       <SectionPanel
-        eyebrow="Application Status"
+        eyebrow="报名记录"
         title="我的报名"
-        description="查看已提交、待筛选、待面试和最终结果状态。"
+        description="在这里查看每一份报名进展。"
         actions={
           <Link to="/discover" className="secondary-link">
-            去发现更多社团
+            查看更多社团
           </Link>
         }
       >
@@ -38,8 +38,8 @@ export function ApplicationsPage() {
           </div>
         ) : (
           <EmptyState
-            title="你还没有报名记录"
-            description="先去发现页看看推荐社团，找到合适的再提交第一份报名。"
+            title="暂无报名记录"
+            description="先去发现页看看，再提交第一份报名。"
             actions={
               <Link to="/discover" className="primary-link">
                 去发现页

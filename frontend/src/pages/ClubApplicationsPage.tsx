@@ -7,10 +7,10 @@ type ClubManageStatus = '待筛选' | '待面试' | '已录取' | '未通过'
 
 const quickStatuses: ClubManageStatus[] = ['待筛选', '待面试', '已录取', '未通过']
 const statusActionLabelMap: Record<ClubManageStatus, string> = {
-  待筛选: '推进到待筛选',
+  待筛选: '开始筛选',
   待面试: '发送面试通知',
-  已录取: '发送录取结果',
-  未通过: '发送未通过结果',
+  已录取: '发送录取通知',
+  未通过: '发送未通过通知',
 }
 
 export function ClubApplicationsPage() {
@@ -27,9 +27,9 @@ export function ClubApplicationsPage() {
   return (
     <main className="single-column">
       <SectionPanel
-        eyebrow="Applications"
+        eyebrow="申请处理"
         title="报名处理"
-        description="按当前状态筛选报名记录，并快速推进到待面试、录取或未通过。"
+        description="按状态筛选，并快速推进处理。"
         actions={
           <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as '全部' | ApplicationStatus)}>
             <option value="全部">全部状态</option>
@@ -60,7 +60,7 @@ export function ClubApplicationsPage() {
                 <div className="application-meta">
                   <span>{application.college} · {application.major} · {application.grade}</span>
                   <span>附件：{application.attachmentName}</span>
-                  <span>提交时间：{application.submittedAt}</span>
+                  <span>提交：{application.submittedAt}</span>
                 </div>
                 <textarea
                   value={note}

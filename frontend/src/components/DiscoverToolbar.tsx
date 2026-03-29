@@ -23,18 +23,18 @@ export function DiscoverToolbar({
   return (
     <div className="toolbar">
       <div className="toolbar-search">
-        <span className="toolbar-label">关键词检索</span>
+        <span className="toolbar-label">搜索</span>
         <input
           type="text"
           value={keyword}
           onChange={(event) => onKeywordChange(event.target.value)}
-          placeholder="搜索社团名、标签或关键词"
+          placeholder="搜索社团名或关键词"
         />
       </div>
 
       <div className="toolbar-row">
         <div className="toolbar-block">
-          <span className="toolbar-label">社团分类</span>
+          <span className="toolbar-label">分类</span>
           <div className="chip-group compact">
             {categories.map((category) => (
               <button
@@ -50,7 +50,7 @@ export function DiscoverToolbar({
         </div>
 
         <div className="toolbar-block">
-          <span className="toolbar-label">排序方式</span>
+          <span className="toolbar-label">排序</span>
           <div className="sort-group">
             {(['matchScore', 'deadline', 'hot'] as SortType[]).map((item) => (
               <button

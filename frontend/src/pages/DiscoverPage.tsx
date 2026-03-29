@@ -110,9 +110,9 @@ export function DiscoverPage() {
   return (
     <main className="content">
       <SectionPanel
-        eyebrow="Discover"
-        title="社团发现中心"
-        description="先用关键词和分类快速缩小范围，再优先查看最匹配你的社团。"
+        eyebrow="发现"
+        title="社团发现"
+        description="先筛选，再看推荐。"
         tone="featured"
       >
         <DiscoverToolbar
@@ -128,23 +128,23 @@ export function DiscoverPage() {
 
       {shouldShowGuide ? (
         <SectionPanel
-          eyebrow="First Guide"
-          title="先按这3步完成首次上手"
-          description={welcomeNotification?.content ?? '建议先完善画像，再触发AI匹配，最后上传简历完成第一份报名。'}
+          eyebrow="新手引导"
+          title="第一次使用，先做这3步"
+          description={welcomeNotification?.content ?? '先填画像，再看推荐，最后提交报名。'}
         >
           <div className="onboarding-guide">
             <article className="onboarding-step-card">
               <span className="discover-cover-label">01</span>
-              <h3>完善画像</h3>
-              <p>先补齐学院、专业、年级，并至少选择3个兴趣标签，这会直接影响推荐质量。</p>
+              <h3>补画像</h3>
+              <p>先补基础信息和兴趣标签，推荐会更准。</p>
               <Link to="/profile" className="secondary-link">
-                去完善画像
+                去填写画像
               </Link>
             </article>
             <article className="onboarding-step-card">
               <span className="discover-cover-label">02</span>
-              <h3>触发AI匹配</h3>
-              <p>基于当前画像拿到第一轮AI推荐，并查看最近一次匹配时间与历史结果。</p>
+              <h3>跑一次AI推荐</h3>
+              <p>先拿到一版推荐结果，再决定投哪个。</p>
               <button
                 type="button"
                 className="secondary-button"
@@ -154,15 +154,15 @@ export function DiscoverPage() {
                   void runAiMatchMutation.mutateAsync(false)
                 }}
               >
-                立即匹配
+                开始匹配
               </button>
             </article>
             <article className="onboarding-step-card">
               <span className="discover-cover-label">03</span>
-              <h3>上传简历后报名</h3>
-              <p>选择适合的社团方向，在报名页上传简历，提交后可在“我的报名”和“消息中心”继续追踪。</p>
+              <h3>提交报名</h3>
+              <p>选好方向后投递，后续进展会同步到报名和消息里。</p>
               <Link to="/applications" className="secondary-link">
-                查看报名页
+                查看报名
               </Link>
             </article>
           </div>
@@ -177,26 +177,26 @@ export function DiscoverPage() {
                 setDismissedGuide(true)
               }}
             >
-              暂时收起引导
+              先收起
             </button>
           </div>
         </SectionPanel>
       ) : null}
 
       <SectionPanel
-        eyebrow="Curated Picks"
-        title="为你优先推荐"
-        description="点击后基于你的用户画像触发一次AI匹配，返回更贴近你当前选择偏好的推荐结果。"
+        eyebrow="AI推荐"
+        title="AI推荐"
+        description="基于当前画像生成一版推荐结果。"
       >
         <div className="ai-match-panel">
           <div className="ai-match-intro">
-            <span className="discover-cover-label">AI Match</span>
-            <h3>让AI基于你的画像给出一次真实推荐。</h3>
-            <p>只有在你主动触发后，系统才会调用AI生成高匹配社团和推荐理由。</p>
+            <span className="discover-cover-label">智能匹配</span>
+            <h3>先让AI帮你缩小范围</h3>
+            <p>匹配后会返回推荐社团和简短理由。</p>
           </div>
           <div className="ai-match-actions">
             <span className={`status-badge ${isProfileReadyForAiMatch ? 'success' : 'pending'}`}>
-              {isProfileReadyForAiMatch ? '画像已完整' : '画像待完善'}
+              {isProfileReadyForAiMatch ? '可开始匹配' : '画像待完善'}
             </span>
             <button
               type="button"
@@ -212,14 +212,14 @@ export function DiscoverPage() {
               }}
             >
               {!hasSupabaseEnv
-                ? '当前环境未开启AI匹配'
+                ? '当前环境不可用'
                 : !isProfileReadyForAiMatch
-                  ? '请先完善画像'
+                  ? '去填写画像'
                 : runAiMatchMutation.isPending
-                  ? 'AI匹配中...'
+                  ? '处理中...'
                   : latestAiMatchQuery.data
-                    ? '使用当前画像匹配结果'
-                    : '一键AI匹配'}
+                    ? '重新匹配'
+                    : '开始AI匹配'}
             </button>
             {latestAiMatchQuery.data ? (
               <button
@@ -236,15 +236,15 @@ export function DiscoverPage() {
             ) : null}
             <span className="ai-match-hint">
               {!isProfileReadyForAiMatch
-                ? `画像未填写完整，需先补充：${incompleteProfileFields.join('、')}`
+                ? `还缺：${incompleteProfileFields.join('、')}`
                 : hasSupabaseEnv
                 ? latestGeneratedAt
-                  ? `最近一次匹配时间：${latestGeneratedAt} · 来源：${latestSource === 'cache' ? '缓存结果' : '实时生成'}`
-                  : 'AI会结合兴趣、技能、期望收获和可投入时间生成推荐理由。'
-                : '配置Supabase环境并登录后，可使用真实AI匹配。'}
+                  ? `最近匹配：${latestGeneratedAt} · ${latestSource === 'cache' ? '缓存结果' : '实时生成'}`
+                  : 'AI会结合兴趣、技能、时间和期望收获给出推荐。'
+                : '接入Supabase后可使用真实AI匹配。'}
             </span>
             <Link to="/profile" className="secondary-link ai-match-link">
-              去完善画像
+              去填写画像
             </Link>
           </div>
         </div>
@@ -253,7 +253,7 @@ export function DiscoverPage() {
           <MutationFeedback
             feedback={{
               status: 'error',
-              message: runAiMatchMutation.error instanceof Error ? runAiMatchMutation.error.message : 'AI匹配失败，请稍后重试',
+              message: runAiMatchMutation.error instanceof Error ? runAiMatchMutation.error.message : '匹配失败，请稍后重试',
             }}
           />
         ) : null}
@@ -274,11 +274,11 @@ export function DiscoverPage() {
 
         {hasRequestedAi && !runAiMatchMutation.isPending && recommendedClubs.length === 0 ? (
           <EmptyState
-            title="还没有生成AI推荐"
+            title="暂无推荐结果"
             description={
               runAiMatchMutation.isError
-                ? '本次AI匹配请求失败了，请稍后重试。'
-                : 'AI暂时没有返回有效结果，你可以调整画像后再次尝试。'
+                ? '本次匹配失败，请稍后再试。'
+                : '暂时没有可用结果，调整画像后再试试。'
             }
           />
         ) : null}
@@ -286,9 +286,9 @@ export function DiscoverPage() {
         {aiMatchHistoryQuery.data && aiMatchHistoryQuery.data.length > 0 ? (
           <div className="ai-history-panel">
             <div className="section-copy">
-              <span className="discover-cover-label">History</span>
-              <h3>最近匹配记录</h3>
-              <p>便于你回看最近几次AI给出的推荐时间和结果来源。</p>
+              <span className="discover-cover-label">历史记录</span>
+              <h3>最近匹配</h3>
+              <p>方便回看最近几次结果。</p>
             </div>
             <div className="ai-history-list">
               {aiMatchHistoryQuery.data.map((item) => (
@@ -296,9 +296,9 @@ export function DiscoverPage() {
                   <div className="club-card-top">
                     <div>
                       <strong>{item.generatedAt}</strong>
-                      <span>{item.source === 'cache' ? '缓存命中' : '实时生成'}</span>
+                      <span>{item.source === 'cache' ? '缓存结果' : '实时生成'}</span>
                     </div>
-                    <span className="status-badge neutral">{item.matches.length}条结果</span>
+                    <span className="status-badge neutral">{item.matches.length}项</span>
                   </div>
                   <p>{item.matches.map((match) => scoredClubs.find((club) => club.id === match.clubId)?.name ?? match.clubId).join('、')}</p>
                 </article>
@@ -309,9 +309,9 @@ export function DiscoverPage() {
       </SectionPanel>
 
       <SectionPanel
-        eyebrow="All Clubs"
+        eyebrow="社团列表"
         title="全部社团"
-        description={`当前筛选结果共${clubList.length}个，你可以继续比较风格、方向与投入强度。`}
+        description={`共${clubList.length}个结果。`}
       >
         {clubList.length > 0 ? (
           <div className="recommend-grid">
@@ -321,8 +321,8 @@ export function DiscoverPage() {
           </div>
         ) : (
           <EmptyState
-            title="没有匹配到社团"
-            description="当前筛选条件下没有可展示的社团，试试调整关键词、分类或画像标签。"
+            title="没有找到社团"
+            description="换个关键词或筛选条件试试。"
           />
         )}
       </SectionPanel>

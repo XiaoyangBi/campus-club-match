@@ -8,7 +8,7 @@ export function AdminLayout() {
   const accessQuery = useWorkspaceAccessQuery()
 
   if (isAuthEnabled && isLoading) {
-    return <div className="page-shell auth-placeholder">正在初始化管理端身份...</div>
+    return <div className="page-shell auth-placeholder">正在加载管理端...</div>
   }
 
   if (isAuthEnabled && !isAuthenticated) {
@@ -16,7 +16,7 @@ export function AdminLayout() {
   }
 
   if (isAuthEnabled && accessQuery.isPending) {
-    return <div className="page-shell auth-placeholder">正在校验管理端角色权限...</div>
+    return <div className="page-shell auth-placeholder">正在校验权限...</div>
   }
 
   if (isAuthEnabled && accessQuery.data && !accessQuery.data.isPlatformAdmin) {
@@ -24,8 +24,8 @@ export function AdminLayout() {
       <main className="single-column">
         <EmptyState
           panel
-          title="当前账号无管理端权限"
-          description={`当前登录邮箱${accessQuery.data.email}还未被加入平台管理员名单。请在数据库表platform_admin_users中授权后再登录。`}
+          title="当前账号暂无管理端权限"
+          description={`邮箱${accessQuery.data.email}尚未加入管理员名单。`}
         />
       </main>
     )
@@ -36,8 +36,8 @@ export function AdminLayout() {
       <main className="single-column">
         <EmptyState
           panel
-          title="当前账号无管理端权限"
-          description={`当前登录邮箱${user?.email ?? ''}无法进入管理端。请在数据库表platform_admin_users中为该邮箱分配管理员权限。`}
+          title="当前账号暂无管理端权限"
+          description={`邮箱${user?.email ?? ''}暂时无法进入管理端。`}
         />
       </main>
     )
@@ -65,9 +65,9 @@ export function AdminLayout() {
         </div>
         <div className="hero compact">
           <div className="hero-copy">
-            <span className="eyebrow">Admin Workspace</span>
-            <h1>用最小治理能力保证平台招新流程可控。</h1>
-            <p>当前版本聚焦审核社团、配置周期和查看基础看板，满足首期平台治理需求。</p>
+            <span className="eyebrow">管理端</span>
+            <h1>审核社团，管理招新节奏。</h1>
+            <p>这里聚焦审核、周期配置和基础看板。</p>
           </div>
         </div>
       </header>

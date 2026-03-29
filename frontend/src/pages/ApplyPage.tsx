@@ -33,7 +33,7 @@ export function ApplyPage() {
   if (isBootstrapping) {
     return (
       <main className="single-column">
-        <EmptyState panel title="社团加载中" description="正在加载报名信息，请稍候。" />
+        <EmptyState panel title="正在加载社团" description="请稍候。" />
       </main>
     )
   }
@@ -44,7 +44,7 @@ export function ApplyPage() {
         <EmptyState
           panel
           title="未找到对应社团"
-          description="请从发现页重新进入报名流程，确保当前社团仍然处于可浏览状态。"
+          description="请返回发现页重新选择。"
         />
       </main>
     )
@@ -52,7 +52,7 @@ export function ApplyPage() {
 
   const handleSubmit = async () => {
     if (!resumeFile) {
-      setResumeError('请上传简历后再提交报名')
+      setResumeError('请先上传简历')
       return
     }
 
@@ -72,7 +72,7 @@ export function ApplyPage() {
         navigate('/applications')
       }
     } catch (error) {
-      setResumeError(error instanceof Error ? error.message : '简历上传失败，请稍后重试')
+      setResumeError(error instanceof Error ? error.message : '上传失败，请稍后重试')
     } finally {
       setIsSubmitting(false)
     }
@@ -81,14 +81,13 @@ export function ApplyPage() {
   return (
     <main className="single-column">
       <SectionPanel
-        eyebrow="Apply"
-        title="在线报名"
-        description={`填写报名方向与自我介绍，完成对${club.name}的投递。`}
+        eyebrow="报名"
+        title="提交报名"
+        description={`确认方向并补充介绍后，提交到${club.name}。`}
       >
         <ClubInfoPanel club={club} />
 
         <ApplicationForm
-          clubName={club.name}
           clubId={club.id}
           directions={club.availableDirections}
           selectedDirection={selectedDirection}

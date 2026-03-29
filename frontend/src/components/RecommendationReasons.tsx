@@ -9,7 +9,7 @@ export function RecommendationReasons({
 }: RecommendationReasonsProps) {
   return (
     <div>
-      <h3>推荐原因</h3>
+      <h3>为什么推荐</h3>
       <ul className="bullet-list">
         {reasons.map((reason) => (
           <li key={reason}>{reason}</li>
@@ -18,7 +18,7 @@ export function RecommendationReasons({
 
       {highlights.length > 0 ? (
         <>
-          <h3>社团亮点</h3>
+          <h3>社团特点</h3>
           <ul className="bullet-list">
             {highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>

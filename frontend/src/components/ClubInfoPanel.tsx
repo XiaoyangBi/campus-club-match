@@ -12,8 +12,8 @@ export function ClubInfoPanel({ club, sideContent }: ClubInfoPanelProps) {
   const infoItems = [
     { label: '报名截止', value: club.recruitDeadline },
     { label: '活动频率', value: club.frequency },
-    { label: '适合人群', value: club.fit },
-    { label: '可报名方向', value: club.availableDirections.join('、') },
+    { label: '适合对象', value: club.fit },
+    { label: '报名方向', value: club.availableDirections.join('、') },
   ]
 
   return (

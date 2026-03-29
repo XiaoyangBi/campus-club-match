@@ -22,9 +22,9 @@ export function MessagesPage() {
   return (
     <main className="single-column">
       <SectionPanel
-        eyebrow="Inbox"
+        eyebrow="消息"
         title="消息中心"
-        description={`当前共有${inbox?.unreadCount ?? 0}条未读消息，覆盖报名提交与状态变化提醒。`}
+        description={`当前有${inbox?.unreadCount ?? 0}条未读消息。`}
         actions={
           <button
             type="button"
@@ -32,14 +32,14 @@ export function MessagesPage() {
             disabled={!inbox || inbox.notifications.length === 0 || markReadMutation.isPending}
             onClick={() => void markReadMutation.mutateAsync(undefined)}
           >
-            全部标记已读
+            全部标为已读
           </button>
         }
       >
         {welcomeNotification ? (
           <div className="welcome-message-banner">
             <div>
-              <span className="discover-cover-label">Welcome</span>
+              <span className="discover-cover-label">新手消息</span>
               <h3>{welcomeNotification.title}</h3>
               <p>{welcomeNotification.content}</p>
             </div>
@@ -47,7 +47,7 @@ export function MessagesPage() {
         ) : null}
 
         {notificationsQuery.isPending ? (
-          <EmptyState panel title="消息加载中" description="正在读取你的站内消息，请稍候。" />
+          <EmptyState panel title="正在加载消息" description="请稍候。" />
         ) : inbox && inbox.notifications.length > 0 ? (
           <div className="message-list">
             {inbox.notifications.map((notification) => (
@@ -75,7 +75,7 @@ export function MessagesPage() {
             ))}
           </div>
         ) : (
-          <EmptyState panel title="暂时还没有消息" description="提交报名或状态更新后，系统会把提醒写到这里。" />
+          <EmptyState panel title="暂无消息" description="报名提交或状态更新后，会在这里提醒你。" />
         )}
       </SectionPanel>
     </main>

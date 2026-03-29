@@ -85,7 +85,7 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
     try {
       setFeedback({
         status: 'loading',
-        message: '正在读取PDF并生成候选画像...',
+        message: '正在解析...',
       })
 
       const extractedText = await extractPdfText(resumeFile)
@@ -95,13 +95,13 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
       setSelection(buildDefaultSelection(profile, nextSuggestion))
       setFeedback({
         status: 'success',
-        message: '已生成一版候选画像，请确认后写入到当前画像',
+        message: '解析完成，请确认要采纳的内容',
       })
     } catch (error) {
       setSuggestion(null)
       setFeedback({
         status: 'error',
-        message: error instanceof Error ? error.message : '简历解析失败，请稍后重试',
+        message: error instanceof Error ? error.message : '解析失败，请稍后重试',
       })
     }
   }
@@ -125,7 +125,7 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
     onApplySuggestion(nextProfile)
     setFeedback({
       status: 'success',
-      message: '候选画像已写入待保存内容，点击页面顶部“保存画像”后正式生效',
+      message: '已写入当前编辑内容，请再点击“保存修改”',
     })
   }
 
@@ -133,13 +133,13 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
     <section className="resume-assistant-card">
       <div className="resume-assistant-head">
         <div>
-          <span className="section-eyebrow">Resume Assist</span>
-          <h3>上传简历，辅助生成画像</h3>
-          <p>如果你暂时不知道该怎么填写兴趣、技能和期望收获，可以先上传一份PDF简历，系统会生成一版候选画像供你确认。</p>
+          <span className="section-eyebrow">简历辅助</span>
+          <h3>用简历生成画像</h3>
+          <p>不会填也没关系，先上传简历，我们帮你生成一版候选标签。</p>
         </div>
         <div className="resume-assistant-stats">
           <strong>{parsedTagCount}</strong>
-          <span>已生成候选标签</span>
+          <span>候选标签</span>
         </div>
       </div>
 
@@ -155,8 +155,8 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
           }}
         />
         <div className="resume-upload-meta">
-          <strong>{resumeFile?.name ?? '尚未选择简历文件'}</strong>
-          <span>仅支持文本型PDF，建议文件大小不超过5MB。扫描件或图片型PDF可能无法提取到有效文本。</span>
+          <strong>{resumeFile?.name ?? '尚未选择文件'}</strong>
+          <span>仅支持文本型PDF，建议5MB以内。</span>
         </div>
         <button
           type="button"
@@ -164,7 +164,7 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
           disabled={disabled || parseResumeMutation.isPending || !resumeFile}
           onClick={() => void handleParseResume()}
         >
-          {parseResumeMutation.isPending ? '解析中...' : '开始解析简历'}
+          {parseResumeMutation.isPending ? '处理中...' : '开始解析'}
         </button>
       </div>
 
@@ -186,9 +186,9 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
                   checked={selection.college}
                   onChange={(event) => setSelection((current) => ({ ...current, college: event.target.checked }))}
                 />
-                <span>采纳学院建议</span>
+                <span>采纳学院</span>
               </label>
-              <div className="resume-suggestion-value">{suggestion.college || '未识别到明确学院'}</div>
+              <div className="resume-suggestion-value">{suggestion.college || '未识别到学院'}</div>
             </div>
 
             <div className="resume-suggestion-section">
@@ -198,9 +198,9 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
                   checked={selection.major}
                   onChange={(event) => setSelection((current) => ({ ...current, major: event.target.checked }))}
                 />
-                <span>采纳专业建议</span>
+                <span>采纳专业</span>
               </label>
-              <div className="resume-suggestion-value">{suggestion.major || '未识别到明确专业'}</div>
+              <div className="resume-suggestion-value">{suggestion.major || '未识别到专业'}</div>
             </div>
 
             <div className="resume-suggestion-section">
@@ -210,7 +210,7 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
                   checked={selection.interests}
                   onChange={(event) => setSelection((current) => ({ ...current, interests: event.target.checked }))}
                 />
-                <span>采纳兴趣标签</span>
+                <span>采纳兴趣</span>
               </label>
               <div className="chip-group compact">
                 {suggestion.interests.map((item) => (
@@ -228,7 +228,7 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
                   checked={selection.skills}
                   onChange={(event) => setSelection((current) => ({ ...current, skills: event.target.checked }))}
                 />
-                <span>采纳技能标签</span>
+                <span>采纳技能</span>
               </label>
               <div className="chip-group compact">
                 {suggestion.skills.map((item) => (
@@ -268,9 +268,9 @@ export function ResumeProfileAssistant({ profile, disabled = false, onApplySugge
               </ul>
             </div>
             <button type="button" className="primary-button" disabled={disabled} onClick={handleApplySuggestion}>
-              写入待保存画像
+              写入当前编辑内容
             </button>
-            <p className="resume-suggestion-tip">写入后不会立刻覆盖服务器画像，你仍然可以继续手动调整，并在顶部点击“保存画像”后正式生效。</p>
+            <p className="resume-suggestion-tip">这一步只会更新当前页面，真正保存还要再点一次“保存修改”。</p>
           </aside>
         </div>
       ) : null}

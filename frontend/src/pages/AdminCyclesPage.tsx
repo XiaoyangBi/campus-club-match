@@ -20,7 +20,7 @@ export function AdminCyclesPage() {
 
   return (
     <main className="single-column">
-      <SectionPanel eyebrow="Cycle Config" title="招新周期配置" description="控制平台当前招新周期是否开放，并维护基础通知模板。">
+      <SectionPanel eyebrow="周期配置" title="招新周期" description="维护开放时间与通知模板。">
         <div className="ops-form-grid">
           <div className="field-block">
             <label htmlFor="cycleName">周期名称</label>
@@ -35,7 +35,7 @@ export function AdminCyclesPage() {
             <input id="cycleEnd" value={draft.endDate} onChange={(event) => setDraft({ ...draft, endDate: event.target.value })} />
           </div>
           <div className="field-block">
-            <label htmlFor="cycleNotice">通知模板</label>
+            <label htmlFor="cycleNotice">通用通知模板</label>
             <textarea
               id="cycleNotice"
               rows={5}
@@ -51,7 +51,7 @@ export function AdminCyclesPage() {
               value={draft.interviewNoticeTemplate}
               onChange={(event) => setDraft({ ...draft, interviewNoticeTemplate: event.target.value })}
             />
-            <span className="field-note">{'支持占位符：{{clubName}}、{{status}}、{{note}}、{{selectedDirection}}'}</span>
+            <span className="field-note">{'可用占位符：{{clubName}}、{{status}}、{{note}}、{{selectedDirection}}'}</span>
           </div>
         </div>
         <div className="stack-actions">
@@ -60,10 +60,10 @@ export function AdminCyclesPage() {
             className="secondary-button"
             onClick={() => setDraft((current) => ({ ...current, applyEnabled: !current.applyEnabled }))}
           >
-            {draft.applyEnabled ? '关闭本周期报名' : '开启本周期报名'}
+            {draft.applyEnabled ? '关闭报名' : '开启报名'}
           </button>
           <button type="button" className="primary-button" onClick={() => updateCycle(cycle.id, draft)}>
-            保存周期配置
+            保存配置
           </button>
         </div>
       </SectionPanel>

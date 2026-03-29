@@ -8,7 +8,7 @@ export function ClubLayout() {
   const accessQuery = useWorkspaceAccessQuery()
 
   if (isAuthEnabled && isLoading) {
-    return <div className="page-shell auth-placeholder">正在初始化社团端身份...</div>
+    return <div className="page-shell auth-placeholder">正在加载社团端...</div>
   }
 
   if (isAuthEnabled && !isAuthenticated) {
@@ -16,7 +16,7 @@ export function ClubLayout() {
   }
 
   if (isAuthEnabled && accessQuery.isPending) {
-    return <div className="page-shell auth-placeholder">正在校验社团端角色权限...</div>
+    return <div className="page-shell auth-placeholder">正在校验权限...</div>
   }
 
   if (isAuthEnabled && accessQuery.data && !accessQuery.data.isClubAdmin) {
@@ -24,8 +24,8 @@ export function ClubLayout() {
       <main className="single-column">
         <EmptyState
           panel
-          title="当前账号无社团端权限"
-          description={`当前登录邮箱${accessQuery.data.email}还未被加入社团负责人名单。请在数据库表club_admin_memberships中分配邮箱与社团关系后再登录。`}
+          title="当前账号暂无社团端权限"
+          description={`邮箱${accessQuery.data.email}尚未加入社团管理员名单。`}
         />
       </main>
     )
@@ -36,8 +36,8 @@ export function ClubLayout() {
       <main className="single-column">
         <EmptyState
           panel
-          title="当前账号无社团端权限"
-          description={`当前登录邮箱${user?.email ?? ''}无法进入社团端。请在数据库表club_admin_memberships中为该邮箱分配社团权限。`}
+          title="当前账号暂无社团端权限"
+          description={`邮箱${user?.email ?? ''}暂时无法进入社团端。`}
         />
       </main>
     )
@@ -65,9 +65,9 @@ export function ClubLayout() {
         </div>
         <div className="hero compact">
           <div className="hero-copy">
-            <span className="eyebrow">Club Workspace</span>
-            <h1>轻量处理报名、维护资料、推进招新。</h1>
-            <p>这里保留社团端MVP最关键的三件事：看概览、处理申请、维护资料。</p>
+            <span className="eyebrow">社团端</span>
+            <h1>处理报名，维护社团信息。</h1>
+            <p>这里聚焦三件事：看进度、处理申请、更新资料。</p>
           </div>
         </div>
       </header>

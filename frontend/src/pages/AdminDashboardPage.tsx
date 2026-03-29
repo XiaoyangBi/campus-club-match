@@ -9,7 +9,7 @@ export function AdminDashboardPage() {
 
   return (
     <main className="single-column">
-      <SectionPanel eyebrow="Dashboard" title="平台看板" description="快速查看招新周期、社团审核进度和报名处理规模。">
+      <SectionPanel eyebrow="总览" title="平台看板" description="查看审核、报名与周期状态。">
         <div className="stats-grid">
           <div className="stat-card">
             <span>已通过社团</span>
