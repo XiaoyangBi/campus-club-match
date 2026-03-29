@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { useChatbotMutation } from '../hooks/useStudentDemoData'
 import { useDemoQuery } from '../context/DemoContext'
 import { useAuth } from '../context/AuthContext'
-import type { ChatbotMessage, ChatbotSuggestedClub } from '../types'
+import type { ChatbotMessage, ChatbotReply, ChatbotSuggestedClub } from '../types'
 
 function createMessage(
   role: ChatbotMessage['role'],
@@ -23,6 +25,127 @@ function buildWelcomeMessage(clubCount: number) {
     'assistant',
     `你好，我是社团助手。当前平台已开放${clubCount}个社团，我可以帮你看社团介绍、怎么选社团、报名流程、面试准备和简历建议。`,
   )
+}
+
+function parseNestedJson(value: string, depth = 0): unknown {
+  if (depth >= 3) {
+    return null
+  }
+
+  try {
+    const parsed = JSON.parse(value) as unknown
+
+    if (typeof parsed === 'string') {
+      return parseNestedJson(parsed, depth + 1)
+    }
+
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+function decodeJsonStringValue(value: string) {
+  try {
+    return JSON.parse(`"${value}"`) as string
+  } catch {
+    return value
+      .replace(/\\n/g, '\n')
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
+  }
+}
+
+function extractReplyFieldFromRawText(value: string) {
+  const trimmed = value.trim()
+  const replyPrefix = '"reply":"'
+  const replyStartIndex = trimmed.indexOf(replyPrefix)
+
+  if (replyStartIndex < 0) {
+    return null
+  }
+
+  const start = replyStartIndex + replyPrefix.length
+  const suffixCandidates = ['","suggestedClubs":', '"}', '", "suggestedClubs":']
+
+  for (const suffix of suffixCandidates) {
+    const end = trimmed.lastIndexOf(suffix)
+    if (end > start) {
+      return decodeJsonStringValue(trimmed.slice(start, end)).trim()
+    }
+  }
+
+  return null
+}
+
+function isSuggestedClubArray(value: unknown): value is ChatbotSuggestedClub[] {
+  return Array.isArray(value) && value.every((item) => {
+    if (!item || typeof item !== 'object') {
+      return false
+    }
+
+    const clubId = 'clubId' in item ? item.clubId : undefined
+    const reason = 'reason' in item ? item.reason : undefined
+    return typeof clubId === 'string' && typeof reason === 'string'
+  })
+}
+
+function normalizeReplyPayload(result: { reply: string; suggestedClubs?: ChatbotSuggestedClub[] }): ChatbotReply {
+  let reply = result.reply.trim()
+  let suggestedClubs = result.suggestedClubs ?? []
+
+  for (let depth = 0; depth < 3; depth += 1) {
+    if (!reply.startsWith('{') && !reply.startsWith('"')) {
+      break
+    }
+
+    const parsed = parseNestedJson(reply)
+
+    if (!parsed || typeof parsed !== 'object') {
+      break
+    }
+
+    const nextReply = 'reply' in parsed ? parsed.reply : undefined
+    const nextSuggestedClubs = 'suggestedClubs' in parsed ? parsed.suggestedClubs : undefined
+
+    if (typeof nextReply !== 'string') {
+      break
+    }
+
+    reply = nextReply.trim()
+    if (isSuggestedClubArray(nextSuggestedClubs)) {
+      suggestedClubs = nextSuggestedClubs
+    }
+  }
+
+  const shouldExtractReplyField = reply.trim().startsWith('{') && reply.includes('"reply"')
+  const extractedReply = shouldExtractReplyField ? extractReplyFieldFromRawText(reply) : null
+
+  if (extractedReply) {
+    reply = extractedReply
+  }
+
+  return {
+    reply,
+    suggestedClubs,
+  }
+}
+
+function normalizeStoredMessage(message: ChatbotMessage): ChatbotMessage {
+  if (message.role !== 'assistant') {
+    return message
+  }
+
+  const normalized = normalizeReplyPayload({
+    reply: message.content,
+    suggestedClubs: message.suggestedClubs ?? [],
+  })
+
+  return {
+    ...message,
+    content: normalized.reply,
+    suggestedClubs: normalized.suggestedClubs,
+  }
 }
 
 const quickPrompts = [
@@ -66,7 +189,7 @@ export function ChatbotWidget() {
 
       const parsed = JSON.parse(raw) as unknown
       if (isValidStoredMessages(parsed) && parsed.length > 0) {
-        setMessages(parsed)
+        setMessages(parsed.map(normalizeStoredMessage))
         return
       }
 
@@ -108,12 +231,14 @@ export function ChatbotWidget() {
       },
       {
         onSuccess: (result) => {
+          const normalizedResult = normalizeReplyPayload(result)
+
           setMessages((current) => [
             ...current,
             createMessage(
               'assistant',
-              result.reply.trim() || '我先帮你整理到这里，你也可以继续追问更具体的问题。',
-              result.suggestedClubs ?? [],
+              normalizedResult.reply.trim() || '我先帮你整理到这里，你也可以继续追问更具体的问题。',
+              normalizedResult.suggestedClubs ?? [],
             ),
           ])
         },
@@ -167,16 +292,21 @@ export function ChatbotWidget() {
           </div>
 
           <div className="chatbot-messages">
-            {messages.map((message) => (
-              <article
-                key={message.id}
-                className={message.role === 'assistant' ? 'chatbot-message assistant' : 'chatbot-message user'}
-              >
-                <span className="chatbot-message-role">{message.role === 'assistant' ? '助手' : '你'}</span>
-                <p>{message.content}</p>
-                {message.role === 'assistant' && message.suggestedClubs && message.suggestedClubs.length > 0 ? (
+            {messages.map((message) => {
+              const displayMessage = normalizeStoredMessage(message)
+
+              return (
+                <article
+                  key={message.id}
+                  className={message.role === 'assistant' ? 'chatbot-message assistant' : 'chatbot-message user'}
+                >
+                  <span className="chatbot-message-role">{message.role === 'assistant' ? '助手' : '你'}</span>
+                  <div className="chatbot-message-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayMessage.content}</ReactMarkdown>
+                  </div>
+                  {message.role === 'assistant' && displayMessage.suggestedClubs && displayMessage.suggestedClubs.length > 0 ? (
                   <div className="chatbot-suggestion-list">
-                    {message.suggestedClubs.map((suggestion) => {
+                    {displayMessage.suggestedClubs.map((suggestion) => {
                       const club = clubs.find((item) => item.id === suggestion.clubId)
 
                       if (!club) {
@@ -202,8 +332,9 @@ export function ChatbotWidget() {
                     })}
                   </div>
                 ) : null}
-              </article>
-            ))}
+                </article>
+              )
+            })}
 
             {chatMutation.isPending ? (
               <article className="chatbot-message assistant pending">

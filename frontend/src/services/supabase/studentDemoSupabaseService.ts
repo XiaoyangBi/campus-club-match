@@ -23,7 +23,24 @@ type WithdrawApplicationInput = {
   applicationId: string
 }
 
-async function invokeFunction<TResponse>(name: string, body: Record<string, unknown>) {
+function isResponseLike(value: unknown): value is Response {
+  return typeof value === 'object' && value !== null && 'text' in value
+}
+
+function isEdgeFunctionNetworkError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  return [
+    'Failed to send a request to the Edge Function',
+    'Failed to fetch',
+    'Load failed',
+    'NetworkError',
+  ].some((keyword) => error.message.includes(keyword))
+}
+
+async function invokeFunctionOnce<TResponse>(name: string, body: Record<string, unknown>) {
   if (!supabase) {
     throw new Error('Supabase client is not configured')
   }
@@ -33,10 +50,56 @@ async function invokeFunction<TResponse>(name: string, body: Record<string, unkn
   })
 
   if (error) {
+    const maybeContext =
+      typeof error === 'object' && error !== null && 'context' in error ? error.context : null
+
+    if (isResponseLike(maybeContext)) {
+      try {
+        const rawText = await maybeContext.text()
+        const parsed = JSON.parse(rawText) as { error?: string }
+
+        if (parsed?.error) {
+          throw new Error(parsed.error)
+        }
+
+        if (rawText.trim()) {
+          throw new Error(rawText)
+        }
+      } catch (parseError) {
+        if (parseError instanceof Error && parseError.message) {
+          throw parseError
+        }
+      }
+    }
+
     throw error
   }
 
   return data as TResponse
+}
+
+async function invokeFunction<TResponse>(name: string, body: Record<string, unknown>) {
+  if (!supabase) {
+    throw new Error('Supabase client is not configured')
+  }
+
+  try {
+    return await invokeFunctionOnce<TResponse>(name, body)
+  } catch (error) {
+    if (isEdgeFunctionNetworkError(error)) {
+      try {
+        return await invokeFunctionOnce<TResponse>(name, body)
+      } catch (retryError) {
+        if (isEdgeFunctionNetworkError(retryError)) {
+          throw new Error('网络有点波动，暂时没连上服务。请稍后再试一次。')
+        }
+
+        throw retryError
+      }
+    }
+
+    throw error
+  }
 }
 
 export const studentDemoSupabaseService = {

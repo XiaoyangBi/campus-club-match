@@ -39,7 +39,36 @@ function extractContent(content: unknown) {
 function parseJsonFromModel(raw: string) {
   const fenced = raw.match(/```json\s*([\s\S]*?)```/i)
   const jsonText = fenced ? fenced[1] : raw
-  return JSON.parse(jsonText)
+  let current: unknown = jsonText
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (typeof current !== 'string') {
+      return current
+    }
+
+    current = JSON.parse(current.trim())
+  }
+
+  return current
+}
+
+function tryParseStructuredReply(raw: string): ParsedChatbotResponse | null {
+  try {
+    const parsed = parseJsonFromModel(raw)
+
+    if (!parsed || typeof parsed !== 'object') {
+      return null
+    }
+
+    return parsed as ParsedChatbotResponse
+  } catch {
+    return null
+  }
+}
+
+function looksLikeJsonObject(value: string) {
+  const trimmed = value.trim()
+  return trimmed.startsWith('{') && trimmed.endsWith('}')
 }
 
 function normalizeMessages(messages: unknown): ChatMessage[] {
@@ -200,16 +229,27 @@ JSON格式必须严格如下：
     }
 
     const rawResponse = await response.json()
-    const content = extractContent(rawResponse?.choices?.[0]?.message?.content)
-    const parsed = parseJsonFromModel(content) as ParsedChatbotResponse
-    const reply = String(parsed.reply ?? '').trim()
+    const content = extractContent(rawResponse?.choices?.[0]?.message?.content).trim()
+    const parsed = tryParseStructuredReply(content)
+    let reply = String(parsed?.reply ?? content).trim()
+    let suggestedClubSource = parsed?.suggestedClubs
+
+    if (looksLikeJsonObject(reply)) {
+      const nestedParsed = tryParseStructuredReply(reply)
+      if (nestedParsed?.reply) {
+        reply = String(nestedParsed.reply).trim()
+        suggestedClubSource = Array.isArray(nestedParsed.suggestedClubs)
+          ? nestedParsed.suggestedClubs
+          : suggestedClubSource
+      }
+    }
 
     if (!reply) {
       throw new Error('AI did not return a valid reply')
     }
 
-    const suggestedClubs = Array.isArray(parsed.suggestedClubs)
-      ? parsed.suggestedClubs
+    const suggestedClubs = Array.isArray(suggestedClubSource)
+      ? suggestedClubSource
           .map((item) => ({
             clubId: String(item.clubId ?? '').trim(),
             reason: String(item.reason ?? '').trim().slice(0, 50),

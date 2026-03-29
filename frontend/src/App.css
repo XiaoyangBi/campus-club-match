@@ -2054,12 +2054,63 @@
   letter-spacing: 0.08em;
 }
 
-.chatbot-message p {
-  margin: 0;
+.chatbot-message-body {
   color: var(--color-text);
   font-size: 14px;
   line-height: 1.75;
-  white-space: pre-wrap;
+}
+
+.chatbot-message-body > :first-child {
+  margin-top: 0;
+}
+
+.chatbot-message-body > :last-child {
+  margin-bottom: 0;
+}
+
+.chatbot-message-body p,
+.chatbot-message-body ul,
+.chatbot-message-body ol,
+.chatbot-message-body blockquote,
+.chatbot-message-body pre {
+  margin: 0;
+}
+
+.chatbot-message-body p + p,
+.chatbot-message-body p + ul,
+.chatbot-message-body p + ol,
+.chatbot-message-body ul + p,
+.chatbot-message-body ol + p,
+.chatbot-message-body ul + ul,
+.chatbot-message-body ol + ol {
+  margin-top: 10px;
+}
+
+.chatbot-message-body ul,
+.chatbot-message-body ol {
+  padding-left: 18px;
+}
+
+.chatbot-message-body li + li {
+  margin-top: 6px;
+}
+
+.chatbot-message-body strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.chatbot-message-body code {
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(244, 231, 168, 0.28);
+  color: var(--color-text);
+  font-size: 12px;
+}
+
+.chatbot-message-body a {
+  color: var(--color-accent-deep);
+  text-decoration: underline;
 }
 
 .chatbot-suggestion-list {
