@@ -247,6 +247,168 @@
   min-width: 120px;
 }
 
+.resume-assistant-card {
+  margin-top: 22px;
+  padding: 22px;
+  border: 1px solid var(--color-line);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.2)),
+    linear-gradient(135deg, rgba(244, 231, 168, 0.18), rgba(255, 252, 247, 0.92) 58%);
+  box-shadow: var(--shadow-soft);
+}
+
+.resume-assistant-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.resume-assistant-head h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.resume-assistant-head p {
+  margin: 10px 0 0;
+  max-width: 720px;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.resume-assistant-stats {
+  min-width: 140px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.6);
+  text-align: right;
+}
+
+.resume-assistant-stats strong {
+  display: block;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.resume-assistant-stats span {
+  color: var(--color-text-soft);
+  font-size: 12px;
+}
+
+.resume-upload-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 1.2fr) auto;
+  gap: 14px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.resume-upload-box input[type='file'] {
+  color: var(--color-text);
+}
+
+.resume-upload-meta {
+  display: grid;
+  gap: 6px;
+}
+
+.resume-upload-meta strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.resume-upload-meta span,
+.resume-suggestion-tip {
+  color: var(--color-text-soft);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.resume-suggestion-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.85fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.resume-suggestion-main,
+.resume-suggestion-side {
+  display: grid;
+  gap: 14px;
+}
+
+.resume-suggestion-summary,
+.resume-suggestion-section,
+.resume-evidence-card {
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.resume-suggestion-summary span,
+.resume-evidence-card span {
+  color: var(--color-text-soft);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-suggestion-summary strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.resume-suggestion-summary small {
+  display: inline-flex;
+  margin-top: 10px;
+  color: var(--color-accent-deep);
+  font-size: 12px;
+}
+
+.resume-toggle-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.resume-toggle-line input {
+  margin: 0;
+}
+
+.resume-suggestion-value {
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.resume-evidence-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
 .profile-grid,
 .info-grid {
   display: grid;

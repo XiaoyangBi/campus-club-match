@@ -191,4 +191,10 @@ export function useMarkNotificationsReadMutation() {
   })
 }
 
+export function useParseResumeMutation() {
+  return useMutation({
+    mutationFn: (extractedText: string) => studentDemoService.parseResumeText(extractedText),
+  })
+}
+
 export { studentDemoKeys }

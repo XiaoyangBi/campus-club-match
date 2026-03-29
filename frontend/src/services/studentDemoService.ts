@@ -3,6 +3,7 @@ import type {
   AiMatchHistoryRecord,
   AiMatchResult,
   NotificationInbox,
+  ResumeParseSuggestion,
   StudentDemoBootstrap,
   StudentProfile,
 } from '../types'
@@ -17,6 +18,32 @@ import {
   withdrawApplication as withdrawApplicationByMockApi,
 } from './mock/studentDemoMockApi'
 import { studentDemoSupabaseService } from './supabase/studentDemoSupabaseService'
+
+function pickMatches(sourceText: string, options: readonly string[], maxCount: number) {
+  const matched = options.filter((option) => sourceText.includes(option)).slice(0, maxCount)
+  return matched
+}
+
+function buildMockResumeSuggestion(extractedText: string): ResumeParseSuggestion {
+  const normalizedText = extractedText.replace(/\s+/g, '')
+  const interests = pickMatches(normalizedText, initialProfile.interests.length ? ['媒体运营', '摄影摄像', '设计创意', '竞赛科研', '公益服务', '活动策划', '体育运动', '音乐舞蹈'] : [], 5)
+  const skills = pickMatches(normalizedText, ['文案写作', '平面设计', '视频剪辑', '编程开发', '组织协调', '主持表达'], 5)
+  const expectedGain = pickMatches(normalizedText, ['技能提升', '社交拓展', '比赛经历', '志愿服务', '表达机会'], 3)
+
+  return {
+    college: normalizedText.includes('计算机') ? '计算机学院' : '',
+    major: normalizedText.includes('软件工程') ? '软件工程' : normalizedText.includes('计算机科学') ? '计算机科学与技术' : '',
+    interests: interests.length > 0 ? interests : ['竞赛科研', '活动策划'],
+    skills: skills.length > 0 ? skills : ['组织协调', '文案写作'],
+    expectedGain: expectedGain.length > 0 ? expectedGain : ['技能提升', '社交拓展'],
+    summary: '已根据简历中的经历、项目和关键词生成一版候选画像，建议你确认后再保存到正式画像。',
+    confidence: normalizedText.length > 400 ? 'medium' : 'low',
+    evidence: [
+      '提取了简历中的项目经历、校园活动和技能关键词',
+      '优先映射到平台现有的兴趣、技能与期望收获标签',
+    ],
+  }
+}
 
 type SubmitApplicationInput = {
   clubId: string
@@ -178,5 +205,13 @@ export const studentDemoService = {
     }
 
     return storagePath
+  },
+
+  parseResumeText(extractedText: string) {
+    if (hasSupabaseEnv) {
+      return studentDemoSupabaseService.parseResumeText(extractedText)
+    }
+
+    return Promise.resolve(buildMockResumeSuggestion(extractedText))
   },
 }

@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useState } from 'react'
 import { MutationFeedback } from '../components/MutationFeedback'
 import { PageHeader } from '../components/PageHeader'
 import { ProfileTagSelector } from '../components/ProfileTagSelector'
+import { ResumeProfileAssistant } from '../components/ResumeProfileAssistant'
 import { useDemoActions, useDemoQuery } from '../context/DemoContext'
 import { timeLabelMap } from '../utils/recommendation'
 import type { StudentProfile, TimeLevel } from '../types'
@@ -198,6 +199,17 @@ export function ProfilePage() {
             </select>
           </div>
         </div>
+
+        <ResumeProfileAssistant
+          profile={draftProfile}
+          disabled={profileSaving}
+          onApplySuggestion={(nextProfile) => {
+            setDraftProfile(nextProfile)
+            setCollegeError('')
+            setMajorError('')
+            setInterestError('')
+          }}
+        />
 
         <div className="field-block">
           <label htmlFor="profileTimeLevel">可投入时间</label>

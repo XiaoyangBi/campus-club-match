@@ -3,6 +3,7 @@ import type {
   AiMatchResult,
   ApplicationRecord,
   NotificationInbox,
+  ResumeParseSuggestion,
   StudentDemoBootstrap,
   StudentProfile,
 } from '../../types'
@@ -76,6 +77,12 @@ export const studentDemoSupabaseService = {
   markNotificationsRead(notificationIds?: string[]) {
     return invokeFunction<{ unreadCount: number }>('student-demo-notifications-read', {
       notificationIds: notificationIds ?? [],
+    })
+  },
+
+  parseResumeText(extractedText: string) {
+    return invokeFunction<ResumeParseSuggestion>('student-demo-resume-parse', {
+      extractedText,
     })
   },
 }

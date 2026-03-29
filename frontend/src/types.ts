@@ -82,6 +82,17 @@ export type AiMatchHistoryRecord = AiMatchResult & {
   id: string
 }
 
+export type ResumeParseSuggestion = {
+  college: string
+  major: string
+  interests: string[]
+  skills: string[]
+  expectedGain: string[]
+  summary: string
+  confidence: 'high' | 'medium' | 'low'
+  evidence: string[]
+}
+
 export type NotificationType =
   | 'application_submitted'
   | 'application_withdrawn'
