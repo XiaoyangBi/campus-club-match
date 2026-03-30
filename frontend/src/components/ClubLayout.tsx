@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useWorkspaceAccessQuery } from '../hooks/useOpsData'
 
 export function ClubLayout() {
-  const { isAuthEnabled, isAuthenticated, isLoading, user } = useAuth()
+  const { isAuthEnabled, isAuthenticated, isLoading, signOut, user } = useAuth()
   const accessQuery = useWorkspaceAccessQuery()
 
   if (isAuthEnabled && isLoading) {
@@ -25,7 +25,7 @@ export function ClubLayout() {
         <EmptyState
           panel
           title="当前账号暂无社团端权限"
-          description={`邮箱${accessQuery.data.email}尚未加入社团管理员名单。`}
+          description={`账号${accessQuery.data.email}已登录，但还没有被授权到对应社团。`}
         />
       </main>
     )
@@ -37,7 +37,7 @@ export function ClubLayout() {
         <EmptyState
           panel
           title="当前账号暂无社团端权限"
-          description={`邮箱${user?.email ?? ''}暂时无法进入社团端。`}
+          description={`账号${user?.email ?? ''}暂时无法进入社团端，请确认是否已完成社团管理员授权。`}
         />
       </main>
     )
@@ -61,8 +61,14 @@ export function ClubLayout() {
             <NavLink to="/club/profile" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
               社团资料
             </NavLink>
+            {isAuthEnabled ? (
+              <button type="button" className="nav-link auth-ghost-button" onClick={() => void signOut()}>
+                退出
+              </button>
+            ) : null}
           </nav>
         </div>
+        {isAuthEnabled && user?.email ? <div className="auth-user-meta">登录账号：{user.email}</div> : null}
         <div className="hero compact">
           <div className="hero-copy">
             <span className="eyebrow">社团端</span>

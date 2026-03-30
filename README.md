@@ -127,12 +127,13 @@ Supabase后台操作路径：
 
 ## 角色权限说明
 - 学生端：任意已注册用户可登录
-- 社团端：仅`club_admin_memberships`中被授权的邮箱可进入
-- 管理端：仅`platform_admin_users`中被授权的邮箱可进入
+- 社团端：先用真实邮箱注册账号，再由管理员写入`club_admin_memberships`授权进入
+- 管理端：先用真实邮箱注册账号，再由管理员写入`platform_admin_users`授权进入
 
-当前示例授权邮箱：
-- 社团端：`media-admin@campus.edu`、`public-admin@campus.edu`
-- 管理端：`admin@campus.edu`
+当前授权机制：
+- `Supabase Auth`负责邮箱与密码
+- 业务表负责角色与社团归属
+- 权限校验优先按`user_id`匹配，并兼容历史邮箱授权记录自动绑定
 
 ## 自动部署
 项目已连接GitHub与Vercel。

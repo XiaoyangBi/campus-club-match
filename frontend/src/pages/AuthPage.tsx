@@ -1,14 +1,29 @@
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useWorkspaceAccessQuery } from '../hooks/useOpsData'
+import { opsWorkspaceSupabaseService } from '../services/supabase/opsWorkspaceSupabaseService'
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
+function getPostAuthPath(access: { isPlatformAdmin: boolean; isClubAdmin: boolean }) {
+  if (access.isPlatformAdmin) {
+    return '/admin/dashboard'
+  }
+
+  if (access.isClubAdmin) {
+    return '/club/dashboard'
+  }
+
+  return '/discover'
+}
+
 export function AuthPage() {
   const navigate = useNavigate()
   const { isAuthEnabled, isAuthenticated, isLoading, signInWithPassword, signUpWithPassword } = useAuth()
+  const accessQuery = useWorkspaceAccessQuery()
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,8 +55,12 @@ export function AuthPage() {
     return <Navigate to="/discover" replace />
   }
 
+  if (!isLoading && isAuthenticated && accessQuery.isPending) {
+    return <main className="auth-shell">正在识别账号权限...</main>
+  }
+
   if (!isLoading && isAuthenticated) {
-    return <Navigate to="/discover" replace />
+    return <Navigate to={getPostAuthPath(accessQuery.data ?? { isPlatformAdmin: false, isClubAdmin: false })} replace />
   }
 
   const handleSubmit = async () => {
@@ -67,7 +86,8 @@ export function AuthPage() {
 
       if (mode === 'signin') {
         await signInWithPassword(email, password)
-        navigate('/discover')
+        const access = await opsWorkspaceSupabaseService.getWorkspaceAccess()
+        navigate(getPostAuthPath(access))
         return
       }
 
@@ -77,7 +97,8 @@ export function AuthPage() {
         setMode('signin')
       } else {
         setSuccessMessage('注册成功，已自动登录。')
-        navigate('/discover')
+        const access = await opsWorkspaceSupabaseService.getWorkspaceAccess()
+        navigate(getPostAuthPath(access))
       }
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : '操作失败，请稍后重试')
@@ -94,7 +115,7 @@ export function AuthPage() {
           <h1>{mode === 'signin' ? '登录' : '注册账号'}</h1>
           <p>登录后，画像、报名和消息都会跟随账号保存。</p>
           <div className="field-note">
-            学生端任意邮箱可注册。社团端和管理端仅限已授权邮箱进入。
+            学生端任意真实邮箱可注册。社团端和管理端请先用真实邮箱注册，再由管理员授权开通。
           </div>
         </div>
 
